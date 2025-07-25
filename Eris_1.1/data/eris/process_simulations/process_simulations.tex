@@ -1,0 +1,2009 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{process\_simulations}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{eris-block-1.1-rev.-a-configuration-s123f-aerodynamic-coefficients}{%
+\section{Eris Block 1.1 Rev.~A Configuration S123F -- Aerodynamic
+Coefficients}\label{eris-block-1.1-rev.-a-configuration-s123f-aerodynamic-coefficients}}
+
+    Storing of integrated values from OpenFOAM simulation in rhoCentralFoam:
+
+\begin{itemize}
+\tightlist
+\item
+  total pitch moment coefficient: Cm
+\item
+  total drag coefficient: Cd
+\item
+  total lift coefficient: Cl
+\end{itemize}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Coefficient & Description\tabularnewline
+\midrule
+\endhead
+Cd & Drag coefficient\tabularnewline
+Cs & Side-force coefficient\tabularnewline
+Cl & Lift coefficient\tabularnewline
+CmRoll & Roll-moment coefficient\tabularnewline
+CmPitch & Pitch-moment coefficient\tabularnewline
+CmYaw & Yaw-moment coefficient\tabularnewline
+Cdf & Front-axle drag coefficient\tabularnewline
+Csf & Front-axle side-force coefficient\tabularnewline
+Clf & Front-axle lift coefficient\tabularnewline
+Cdr & Rear-axle drag coefficient\tabularnewline
+Csr & Rear-axle side-force coefficient\tabularnewline
+Clr & Rear-axle lift coefficient\tabularnewline
+\bottomrule
+\end{longtable}
+
+The force coefficients can also be optionally output in terms of their
+front and rear axle constituents:
+
+\begin{verbatim}
+Cd{f,r} = 0.5*Cd {+,-} CmRoll
+Cs{f,r} = 0.5*Cs {+,-} CmYaw
+Cl{f,r} = 0.5*Cl {+,-} CmPitch
+\end{verbatim}
+
+where f and r represent front and rear axles, respectively.
+
+Force and moment coefficients are output in their total and constituent
+components:
+
+\begin{verbatim}
+total force and moment coefficients
+pressure contributions
+viscous contributions
+porous resistance contributions (optional)
+\end{verbatim}
+
+Force and moment coefficients can be computed and output in:
+
+\begin{verbatim}
+the global Cartesian coordinate system (default)
+a user-defined Cartesian coordinate system
+\end{verbatim}
+
+Forces comprise normal pressure:
+
+\[
+F_p = \sum_i \rho_i \, \mathbf{s}_{f,i} \, (p_i - p_{\text{ref}})
+\]
+
+and tangential viscous contributions:
+
+\[
+F_v = \sum_i \mathbf{s}_{f,i} \cdot (\mu \mathbf{R}_{\text{dev}})
+\]
+
+Where: - \(\rho\) is the density, - \(\mathbf{s}_{f,i}\) is the face
+area vector, - \(p\) is the pressure, - \(\mu\) is the dynamic
+viscosity, - \(\mathbf{R}_{\text{dev}}\) is the deviatoric stress
+tensor.
+
+https://www.openfoam.com/documentation/guides/latest/api/classFoam\_1\_1functionObjects\_1\_1forceCoeffs.html\#details
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{196}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{json}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{os}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{subprocess}
+\PY{k+kn}{import} \PY{n+nn}{sys}
+\PY{k+kn}{import} \PY{n+nn}{warnings}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{rcParams}\PY{o}{.}\PY{n}{update}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{font.size}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+m+mi}{22}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{warnings}\PY{o}{.}\PY{n}{filterwarnings}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{197}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Get the current working directory}
+\PY{n}{current\PYZus{}path} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getcwd}\PY{p}{(}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Current path saved: }\PY{l+s+si}{\PYZob{}}\PY{n}{current\PYZus{}path}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Current path saved: /home/lorenzo/CFD/ERIS/POSTPROCESSING
+    \end{Verbatim}
+
+    \hypertarget{load-old-aero-results}{%
+\section{Load old AERO results}\label{load-old-aero-results}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{198}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Path to the JSON file}
+\PY{n}{file\PYZus{}path} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./Eris\PYZus{}B1\PYZus{}1\PYZus{}Aerodynamics.json}\PY{l+s+s2}{\PYZdq{}}
+
+\PY{c+c1}{\PYZsh{} Load the JSON data}
+\PY{k}{with} \PY{n+nb}{open}\PY{p}{(}\PY{n}{file\PYZus{}path}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{k}{as} \PY{n}{file}\PY{p}{:}
+    \PY{n}{data} \PY{o}{=} \PY{n}{json}\PY{o}{.}\PY{n}{load}\PY{p}{(}\PY{n}{file}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Access the main sections}
+\PY{n}{aerodynamics\PYZus{}data} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Aerodynamics}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Accessing specific phases}
+\PY{n}{phase\PYZus{}123F} \PY{o}{=} \PY{n}{aerodynamics\PYZus{}data}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Phase 123F}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{phase\PYZus{}23F} \PY{o}{=} \PY{n}{aerodynamics\PYZus{}data}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Phase 23F}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{uncertainty\PYZus{}scale\PYZus{}error} \PY{o}{=} \PY{n}{aerodynamics\PYZus{}data}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Uncertainty Scale Error}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Print some information}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Phase 123F Reference Area:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{phase\PYZus{}123F}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Reference Area}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Phase 23F Reference Length:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{phase\PYZus{}23F}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Reference Length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Iterating over the aerodynamic coefficient map for Phase 123F}
+\PY{n}{coefficient\PYZus{}map} \PY{o}{=} \PY{n}{phase\PYZus{}123F}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Aerodynamic Coefficient Map}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{[}\PY{p}{]}\PY{p}{)}
+\PY{k}{for} \PY{n}{entry} \PY{o+ow}{in} \PY{n}{coefficient\PYZus{}map}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach: }\PY{l+s+si}{\PYZob{}}\PY{n}{entry}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{, CA: }\PY{l+s+si}{\PYZob{}}\PY{n}{entry}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{, CN Alpha: }\PY{l+s+si}{\PYZob{}}\PY{n}{entry}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CN Alpha}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Phase 123F Reference Area: 3.1416
+Phase 23F Reference Length: 1.5
+Mach: 0.5, CA: 0.20605402, CN Alpha: 0.046410367
+Mach: 0.806, CA: 0.21543269, CN Alpha: 0.43932986
+Mach: 0.998, CA: 0.4886865, CN Alpha: 0.51165371
+Mach: 1.291, CA: 0.52867007, CN Alpha: 0.44838153
+Mach: 1.725, CA: 0.46545768, CN Alpha: 0.46666887
+Mach: 2.52, CA: 0.35781094, CN Alpha: 0.49730074
+Mach: 3.48, CA: 0.28799617, CN Alpha: 0.05001773
+Mach: 4.507, CA: 0.24025521, CN Alpha: 0.051180335
+Mach: 5.69, CA: 0.1929, CN Alpha: 0.0397
+Mach: 6.0, CA: 0.1849, CN Alpha: 0.0395
+Mach: 7.0, CA: 0.1667, CN Alpha: 0.0395
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{199}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Make it dataframe}
+\PY{n}{df\PYZus{}coefficient\PYZus{}map} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{coefficient\PYZus{}map}\PY{p}{)}
+\PY{n}{df\PYZus{}coefficient\PYZus{}map}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{199}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+     Mach        CA  CN Alpha  CM Alpha    CMAD     CMQ    CNAD     CNQ
+0   0.500  0.206054  0.046410 -0.206955 -2.2863 -3.1238  0.5853  0.8204
+1   0.806  0.215433  0.439330 -0.186681 -2.8215 -3.8571  0.5856  0.8210
+2   0.998  0.488687  0.511654 -0.198690 -3.3072 -4.5790  0.5930  0.8375
+3   1.291  0.528670  0.448382 -0.143315 -4.1833 -5.8172  0.6641  0.9403
+4   1.725  0.465458  0.466669 -0.133836 -5.2959 -9.5599  0.8407  1.3967
+5   2.520  0.357811  0.497301 -0.155564 -4.6975 -7.5671  0.7457  1.1531
+6   3.480  0.287996  0.050018 -0.160225 -3.9631 -5.6210  0.6291  0.9011
+7   4.507  0.240255  0.051180 -0.175746 -3.7400 -5.4052  0.5937  0.8599
+8   5.690  0.192900  0.039700 -0.132100 -3.6608 -5.3299  0.5811  0.8453
+9   6.000  0.184900  0.039500 -0.132400 -3.6309 -5.3157  0.5764  0.8412
+10  7.000  0.166700  0.039500 -0.133500 -3.6206 -5.3309  0.5747  0.8417
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{load-datcom-results}{%
+\section{Load DATCOM results}\label{load-datcom-results}}
+
+Here I just want to check that the results of DATCOM obtained with
+different flight conditions (FLTCON) are reasonably similar.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{200}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{datcom}  \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../DATCOM/MACH\PYZus{}ALPHA\PYZus{}CA\PYZus{}CN\PYZus{}CM.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{datcom0} \PY{o}{=} \PY{n}{datcom}\PY{p}{[}\PY{n}{datcom}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ALPHA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+m+mf}{0.0}\PY{p}{]}
+\PY{n}{datcom4} \PY{o}{=} \PY{n}{datcom}\PY{p}{[}\PY{n}{datcom}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ALPHA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+m+mf}{4.0}\PY{p}{]}
+\PY{n}{datcom}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{200}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    MACH  ALPHA      CA      CN      CM
+0   0.60    0.0  0.2164  0.0000  0.0000
+1   0.60    2.0  0.2163  0.0771 -0.2351
+2   0.60    4.0  0.2152  0.1690 -0.5586
+3   0.60    6.0  0.2130  0.2760 -0.9730
+4   0.90    0.0  0.3454  0.0000  0.0000
+5   0.90    2.0  0.3454  0.0772 -0.2357
+6   0.90    4.0  0.3447  0.1697 -0.5624
+7   0.90    6.0  0.3434  0.2780 -0.9847
+8   0.99    0.0  0.4770  0.0000  0.0000
+9   0.99    2.0  0.4768  0.0785 -0.2434
+10  0.99    4.0  0.4757  0.1751 -0.5943
+11  0.99    6.0  0.4737  0.2907 -1.0592
+12  1.10    0.0  0.5804  0.0000  0.0000
+13  1.10    2.0  0.5801  0.0800 -0.2521
+14  1.10    4.0  0.5786  0.1813 -0.6306
+15  1.10    6.0  0.5760  0.3052 -1.1446
+16  1.67    0.0  0.4489  0.0000  0.0000
+17  1.67    2.0  0.4480  0.1340 -0.5736
+18  1.67    4.0  0.4451  0.2908 -1.2821
+19  1.67    6.0  0.4404  0.4725 -2.1391
+20  4.51    0.0  0.2359  0.0000  0.0000
+21  4.51    2.0  0.2363  0.0808 -0.2662
+22  4.51    4.0  0.2374  0.1948 -0.7287
+23  4.51    6.0  0.2393  0.3677 -1.5400
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{load-openfoam-results}{%
+\section{Load OpenFOAM results}\label{load-openfoam-results}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{201}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{root}         \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../SIMULATIONS/}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{flight\PYZus{}times} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t34s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t43s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t46s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t49s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t61s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t107s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{solvers\PYZus{}name} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{grid\PYZus{}levels}  \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{angle\PYZus{}values} \PY{o}{=} \PY{p}{[}\PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{4.0}\PY{p}{]}
+\PY{n}{file\PYZus{}path}    \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{postProcessing/forceCoeffs1/}\PY{l+s+s2}{\PYZdq{}} 
+\PY{n}{file\PYZus{}name}    \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{coefficient.dat}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{202}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Dictionary to store DataFrames for each flight time}
+\PY{n}{data\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+\PY{n}{result} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Mapping of flight times to Mach numbers}
+\PY{c+c1}{\PYZsh{} Not the most elegant solution: should be read from t*.csv}
+\PY{n}{mach\PYZus{}mapping} \PY{o}{=} \PY{p}{\PYZob{}}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{34}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mf}{0.6}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{43}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mf}{0.9}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{46}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mf}{0.99}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{49}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mf}{1.10}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{61}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mf}{1.67}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{107}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mf}{4.51}
+\PY{p}{\PYZcb{}}
+        
+\PY{c+c1}{\PYZsh{} Helper function to execute post\PYZhy{}processing steps}
+\PY{k}{def} \PY{n+nf}{execute\PYZus{}postprocess}\PY{p}{(}\PY{n}{pp\PYZus{}path}\PY{p}{,} \PY{n}{solver}\PY{p}{)}\PY{p}{:}
+    \PY{k}{try}\PY{p}{:}
+        \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{pp\PYZus{}path}\PY{p}{)}
+        \PY{k}{if} \PY{n}{solver} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+            \PY{n}{os}\PY{o}{.}\PY{n}{system}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam \PYZhy{}postProcess \PYZhy{}latestTime \PYZgt{} /dev/null 2\PYZgt{}\PYZam{}1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{elif} \PY{n}{solver} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+            \PY{n}{os}\PY{o}{.}\PY{n}{system}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam \PYZhy{}postProcess \PYZhy{}latestTime \PYZgt{} /dev/null 2\PYZgt{}\PYZam{}1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{current\PYZus{}path}\PY{p}{)}
+    \PY{k}{except} \PY{n+ne}{Exception} \PY{k}{as} \PY{n}{e}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Error: }\PY{l+s+si}{\PYZob{}}\PY{n}{e}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ for solver }\PY{l+s+si}{\PYZob{}}\PY{n}{solver}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{current\PYZus{}path}\PY{p}{)}
+        \PY{k}{return}
+
+\PY{c+c1}{\PYZsh{} Helper function to clean\PYZhy{}up previous post\PYZhy{}processing}
+\PY{k}{def} \PY{n+nf}{remove\PYZus{}postprocess}\PY{p}{(}\PY{n}{pp\PYZus{}path}\PY{p}{)}\PY{p}{:}
+    \PY{k}{try}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Try changing the directory to pp\PYZus{}path and remove postProcessing folder if it exists}
+        \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{pp\PYZus{}path}\PY{p}{)}
+        \PY{n}{subprocess}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rm}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}r}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{postProcessing}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{check}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Remove postProcessing}
+        \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{current\PYZus{}path}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Return to the original directory}
+    \PY{k}{except} \PY{n+ne}{Exception} \PY{k}{as} \PY{n}{e}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Error: }\PY{l+s+si}{\PYZob{}}\PY{n}{e}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ while removing postProcessing.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{current\PYZus{}path}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Ensure we\PYZsq{}re back in the original directory}
+        \PY{k}{return}
+        
+\PY{c+c1}{\PYZsh{} Process each flight time}
+\PY{k}{for} \PY{n}{time} \PY{o+ow}{in} \PY{n}{flight\PYZus{}times}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Flight time: }\PY{l+s+si}{\PYZob{}}\PY{n}{time}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{for} \PY{n}{solver} \PY{o+ow}{in} \PY{n}{solvers\PYZus{}name}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{   Solver: }\PY{l+s+si}{\PYZob{}}\PY{n}{solver}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{for} \PY{n}{grid} \PY{o+ow}{in} \PY{n}{grid\PYZus{}levels}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{      Grid level: }\PY{l+s+si}{\PYZob{}}\PY{n}{grid}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{for} \PY{n}{angle} \PY{o+ow}{in} \PY{n}{angle\PYZus{}values}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{         Angle of attack: }\PY{l+s+si}{\PYZob{}}\PY{n}{angle}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                
+                \PY{n}{pp\PYZus{}path} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{n}{time}\PY{p}{,} \PY{n}{solver}\PY{p}{,} \PY{n}{grid}\PY{p}{,} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{angle\PYZus{}}\PY{l+s+si}{\PYZob{}}\PY{n}{angle}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{n}{remove\PYZus{}postprocess}\PY{p}{(}\PY{n}{pp\PYZus{}path}\PY{p}{)}
+                \PY{n}{execute\PYZus{}postprocess}\PY{p}{(}\PY{n}{pp\PYZus{}path}\PY{p}{,} \PY{n}{solver}\PY{p}{)}
+                
+                \PY{c+c1}{\PYZsh{} Construct directory path}
+                \PY{n}{dir\PYZus{}path} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{n}{time}\PY{p}{,} \PY{n}{solver}\PY{p}{,} \PY{n}{grid}\PY{p}{,} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{angle\PYZus{}}\PY{l+s+si}{\PYZob{}}\PY{n}{angle}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{file\PYZus{}path}\PY{p}{)}
+                \PY{k}{try}\PY{p}{:}
+                    \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{dir\PYZus{}path}\PY{p}{)}
+                \PY{k}{except}\PY{p}{:}
+                    \PY{k}{pass}
+                
+                \PY{c+c1}{\PYZsh{} Get the latest time directory}
+                \PY{k}{try}\PY{p}{:}
+                    \PY{n}{latest\PYZus{}time} \PY{o}{=} \PY{o}{!}foamListTimes\PY{+w}{ }\PYZhy{}latestTime\PY{+w}{ }\PYZhy{}withZero\PY{+w}{ }\PY{p}{|}\PY{+w}{ }tail\PY{+w}{ }\PYZhy{}n\PY{+w}{ }\PY{l+m}{1}
+                    \PY{n}{latest\PYZus{}time} \PY{o}{=} \PY{n}{latest\PYZus{}time}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZdq{}}
+                    \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{current\PYZus{}path}\PY{p}{)}
+                \PY{k}{except}\PY{p}{:}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Error fetching latest time.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                    \PY{n}{os}\PY{o}{.}\PY{n}{chdir}\PY{p}{(}\PY{n}{current\PYZus{}path}\PY{p}{)}
+                    \PY{k}{continue}
+    
+                \PY{c+c1}{\PYZsh{} Construct full file path}
+                \PY{n}{file} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{n}{time}\PY{p}{,} \PY{n}{solver}\PY{p}{,} \PY{n}{grid}\PY{p}{,} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{angle\PYZus{}}\PY{l+s+si}{\PYZob{}}\PY{n}{angle}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{file\PYZus{}path}\PY{p}{,} \PY{n}{latest\PYZus{}time}\PY{p}{,} \PY{n}{file\PYZus{}name}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{File path: }\PY{l+s+si}{\PYZob{}}\PY{n}{file}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                
+                \PY{c+c1}{\PYZsh{} Read data and create DataFrame}
+                \PY{n}{data} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{genfromtxt}\PY{p}{(}\PY{n}{file}\PY{p}{)}
+                \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{[}\PY{n}{data}\PY{p}{]}\PY{p}{,} \PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cd}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cd(f)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cd(r)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cl}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cl(f)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cl(r)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CmPitch}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CmRoll}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CmYaw}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cs(f)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cs(r)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+                
+                \PY{c+c1}{\PYZsh{} Add additional columns}
+                \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AoA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{angle}
+                \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Solver}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{solver}
+                \PY{n}{df}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{LastIter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{\PYZcb{}}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+                \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{time}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+                \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GridLevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{grid}
+                \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{map}\PY{p}{(}\PY{n}{mach\PYZus{}mapping}\PY{p}{)}
+                
+                \PY{c+c1}{\PYZsh{} Store DataFrame in the dictionary and concatenate to the result}
+                \PY{n}{data\PYZus{}dict}\PY{p}{[}\PY{n}{time}\PY{p}{]} \PY{o}{=} \PY{n}{df}
+                \PY{n}{result} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{result}\PY{p}{,} \PY{n}{df}\PY{p}{]}\PY{p}{,} \PY{n}{ignore\PYZus{}index}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Flight time: t34s
+   Solver: rhoCentralFoam
+      Grid level: R0
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t34s/rhoCentralFoam/R0/angle\_0.0/postProcessing/forceC
+oeffs1/8226/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t34s/rhoCentralFoam/R0/angle\_4.0/postProcessing/forceC
+oeffs1/13582/coefficient.dat
+      Grid level: R1
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t34s/rhoCentralFoam/R1/angle\_0.0/postProcessing/forceC
+oeffs1/14656/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t34s/rhoCentralFoam/R1/angle\_4.0/postProcessing/forceC
+oeffs1/14155/coefficient.dat
+      Grid level: R2
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t34s/rhoCentralFoam/R2/angle\_0.0/postProcessing/forceC
+oeffs1/252958/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t34s/rhoCentralFoam/R2/angle\_4.0/postProcessing/forceC
+oeffs1/148400/coefficient.dat
+Flight time: t43s
+   Solver: rhoCentralFoam
+      Grid level: R0
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t43s/rhoCentralFoam/R0/angle\_0.0/postProcessing/forceC
+oeffs1/22362/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t43s/rhoCentralFoam/R0/angle\_4.0/postProcessing/forceC
+oeffs1/12474/coefficient.dat
+      Grid level: R1
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t43s/rhoCentralFoam/R1/angle\_0.0/postProcessing/forceC
+oeffs1/15896/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t43s/rhoCentralFoam/R1/angle\_4.0/postProcessing/forceC
+oeffs1/16141/coefficient.dat
+      Grid level: R2
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t43s/rhoCentralFoam/R2/angle\_0.0/postProcessing/forceC
+oeffs1/253000/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t43s/rhoCentralFoam/R2/angle\_4.0/postProcessing/forceC
+oeffs1/325000/coefficient.dat
+Flight time: t46s
+   Solver: rhoCentralFoam
+      Grid level: R0
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t46s/rhoCentralFoam/R0/angle\_0.0/postProcessing/forceC
+oeffs1/14421/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t46s/rhoCentralFoam/R0/angle\_4.0/postProcessing/forceC
+oeffs1/15632/coefficient.dat
+      Grid level: R1
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t46s/rhoCentralFoam/R1/angle\_0.0/postProcessing/forceC
+oeffs1/23960/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t46s/rhoCentralFoam/R1/angle\_4.0/postProcessing/forceC
+oeffs1/25268/coefficient.dat
+      Grid level: R2
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t46s/rhoCentralFoam/R2/angle\_0.0/postProcessing/forceC
+oeffs1/117350/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t46s/rhoCentralFoam/R2/angle\_4.0/postProcessing/forceC
+oeffs1/200000/coefficient.dat
+Flight time: t49s
+   Solver: rhoCentralFoam
+      Grid level: R0
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t49s/rhoCentralFoam/R0/angle\_0.0/postProcessing/forceC
+oeffs1/10255/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t49s/rhoCentralFoam/R0/angle\_4.0/postProcessing/forceC
+oeffs1/11417/coefficient.dat
+      Grid level: R1
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t49s/rhoCentralFoam/R1/angle\_0.0/postProcessing/forceC
+oeffs1/13885/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t49s/rhoCentralFoam/R1/angle\_4.0/postProcessing/forceC
+oeffs1/14538/coefficient.dat
+      Grid level: R2
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t49s/rhoCentralFoam/R2/angle\_0.0/postProcessing/forceC
+oeffs1/176400/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t49s/rhoCentralFoam/R2/angle\_4.0/postProcessing/forceC
+oeffs1/165300/coefficient.dat
+Flight time: t61s
+   Solver: rhoCentralFoam
+      Grid level: R0
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t61s/rhoCentralFoam/R0/angle\_0.0/postProcessing/forceC
+oeffs1/2000/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t61s/rhoCentralFoam/R0/angle\_4.0/postProcessing/forceC
+oeffs1/2000/coefficient.dat
+      Grid level: R1
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t61s/rhoCentralFoam/R1/angle\_0.0/postProcessing/forceC
+oeffs1/100000/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t61s/rhoCentralFoam/R1/angle\_4.0/postProcessing/forceC
+oeffs1/100000/coefficient.dat
+      Grid level: R2
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t61s/rhoCentralFoam/R2/angle\_0.0/postProcessing/forceC
+oeffs1/0/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t61s/rhoCentralFoam/R2/angle\_4.0/postProcessing/forceC
+oeffs1/199300/coefficient.dat
+Flight time: t107s
+   Solver: rhoCentralFoam
+      Grid level: R0
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t107s/rhoCentralFoam/R0/angle\_0.0/postProcessing/force
+Coeffs1/203000/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t107s/rhoCentralFoam/R0/angle\_4.0/postProcessing/force
+Coeffs1/203000/coefficient.dat
+      Grid level: R1
+         Angle of attack: 0.0
+File path: ../SIMULATIONS/t107s/rhoCentralFoam/R1/angle\_0.0/postProcessing/force
+Coeffs1/300000/coefficient.dat
+         Angle of attack: 4.0
+File path: ../SIMULATIONS/t107s/rhoCentralFoam/R1/angle\_4.0/postProcessing/force
+Coeffs1/300000/coefficient.dat
+      Grid level: R2
+         Angle of attack: 0.0
+Error: Command '['rm', '-r', 'postProcessing']' returned non-zero exit status 1.
+while removing postProcessing.
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+rm: cannot remove 'postProcessing': No such file or directory
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Error fetching latest time.
+         Angle of attack: 4.0
+Error: Command '['rm', '-r', 'postProcessing']' returned non-zero exit status 1.
+while removing postProcessing.
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+rm: cannot remove 'postProcessing': No such file or directory
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Error fetching latest time.
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{203}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{result}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{203}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    LastIter        Cd     Cd(f)     Cd(r)            Cl     Cl(f)     Cl(r)  \textbackslash{}
+0     8226.0  0.313397  0.156485  0.156911  8.010735e-04  0.001675 -0.000874
+1    13582.0  0.315914  0.159402  0.156512 -1.916655e-01 -1.173134  0.981468
+2    14656.0  0.302559  0.150589  0.151970 -1.261613e-03  0.001786 -0.003048
+3    14155.0  0.302447  0.152065  0.150382 -1.875704e-01 -1.143181  0.955611
+4   252958.0  0.309897  0.154648  0.155249 -2.099756e-03 -0.001759 -0.000341
+5   148400.0  0.324272  0.168665  0.155607 -1.895193e-01 -1.190502  1.000982
+6    22362.0  0.316178  0.158008  0.158170  7.090190e-04  0.001483 -0.000774
+7    12474.0  0.324716  0.163999  0.160718 -1.716480e-01 -1.083286  0.911638
+8    15896.0  0.322557  0.161292  0.161265 -4.880946e-04  0.001555 -0.002043
+9    16141.0  0.325859  0.164570  0.161289 -1.694830e-01 -1.060768  0.891285
+10  253000.0  0.351248  0.175601  0.175647 -2.253157e-03 -0.005217  0.002964
+11  325000.0  0.344946  0.177771  0.167175 -1.822713e-01 -1.097919  0.915648
+12   14421.0  0.389739  0.195120  0.194619  8.939374e-04  0.002860 -0.001966
+13   15632.0  0.390232  0.196795  0.193438 -1.644726e-01 -1.079167  0.914694
+14   23960.0  0.392739  0.196299  0.196440 -9.675582e-04  0.001394 -0.002361
+15   25268.0  0.392630  0.197841  0.194790 -1.653857e-01 -1.057552  0.892166
+16  117350.0  1.139724  0.568638  0.571086  2.168707e-01  1.107123 -0.890253
+17  200000.0  0.644046  0.331214  0.312832 -4.044837e-01 -2.224515  1.820032
+18   10255.0  0.435891  0.217230  0.218661 -8.939777e-05 -0.003140  0.003051
+19   11417.0  0.436617  0.218938  0.217679 -1.613675e-01 -1.088131  0.926763
+20   13885.0  0.437251  0.217474  0.219777 -3.360364e-04  0.001028 -0.001364
+21   14538.0  0.437724  0.219291  0.218433 -1.609200e-01 -1.062834  0.901914
+22  176400.0  0.461788  0.229781  0.232007 -3.846937e-04 -0.000448  0.000064
+23  165300.0  0.460893  0.233669  0.227224 -1.676974e-01 -1.077012  0.909314
+24    2000.0  0.481949  0.241085  0.240864  7.281342e-04  0.007427 -0.006699
+25    2000.0  0.482262  0.240899  0.241363 -7.224783e-01 -3.893645  3.171167
+26  100000.0  0.411262  0.204971  0.206291  5.771693e-05  0.001873 -0.001815
+27  100000.0  0.408299  0.204563  0.203736 -2.741315e-01 -1.647058  1.372927
+28       0.0  0.001496  0.000748  0.000748 -9.113787e-09  0.000008 -0.000008
+29  199300.0  0.420359  0.215811  0.204548 -2.939917e-01 -1.691328  1.397337
+30  203000.0  0.216870  0.108727  0.108143  4.198486e-04  0.003113 -0.002694
+31  203000.0  0.215817  0.109691  0.106126 -2.546656e-01 -1.445467  1.190801
+32  300000.0  0.177350  0.088569  0.088781 -8.762325e-07  0.002031 -0.002032
+33  300000.0  0.176468  0.089512  0.086956 -1.829043e-01 -1.121650  0.938746
+
+     CmPitch        CmRoll     CmYaw        Cs     Cs(f)     Cs(r)  AoA  \textbackslash{}
+0   0.001275 -2.130082e-04  1.517957 -0.293912  1.371001 -1.664914  0.0
+1  -1.077301  1.444726e-03  1.644905 -0.330167  1.479822 -1.809989  4.0
+2   0.002417 -6.905603e-04  1.552663 -0.352678  1.376324 -1.729003  0.0
+3  -1.049396  8.416444e-04  1.905480 -0.422629  1.694166 -2.116795  4.0
+4  -0.000709 -3.002726e-04  1.461323 -0.359073  1.281787 -1.640859  0.0
+5  -1.095742  6.529048e-03  1.559651 -0.448163  1.335570 -1.783732  4.0
+6   0.001129 -8.057354e-05  1.778321 -0.341742  1.607450 -1.949192  0.0
+7  -0.997462  1.640654e-03  1.868410 -0.387407  1.674707 -2.062113  4.0
+8   0.001799  1.345440e-05  1.526560 -0.342990  1.355065 -1.698055  0.0
+9  -0.976026  1.640325e-03  1.881269 -0.413680  1.674429 -2.088109  4.0
+10 -0.004090 -2.304025e-05  1.429373 -0.311943  1.273402 -1.585345  0.0
+11 -1.006784  5.297841e-03  1.852810 -0.410858  1.647381 -2.058239  4.0
+12  0.002413  2.505592e-04  1.689997 -0.285936  1.547029 -1.832965  0.0
+13 -0.996931  1.678599e-03  2.027935 -0.358995  1.848437 -2.207432  4.0
+14  0.001877 -7.029246e-05  1.697907 -0.304270  1.545772 -1.850043  0.0
+15 -0.974859  1.525378e-03  2.046959 -0.377389  1.858264 -2.235653  4.0
+16  0.998688 -1.223878e-03 -0.008219  0.001375 -0.007532  0.008907  0.0
+17 -2.022273  9.191172e-03  0.771792 -0.184475  0.679555 -0.864030  4.0
+18 -0.003095 -7.154473e-04  1.193397 -0.193175  1.096810 -1.289985  0.0
+19 -1.007447  6.291548e-04  1.546802 -0.267819  1.412892 -1.680711  4.0
+20  0.001196 -1.151539e-03  1.192385 -0.202704  1.091033 -1.293737  0.0
+21 -0.982374  4.288520e-04  1.551417 -0.277156  1.412840 -1.689995  4.0
+22 -0.000256 -1.112678e-03  1.231650 -0.205015  1.129143 -1.334158  0.0
+23 -0.993163  3.222188e-03  1.605225 -0.281297  1.464577 -1.745873  4.0
+24  0.007063  1.101928e-04 -3.187533  0.433948 -2.970559  3.404506  0.0
+25 -3.532406 -2.318804e-04 -3.221187  0.444134 -2.999120  3.443254  4.0
+26  0.001844 -6.600271e-04 -0.894155  0.084397 -0.851957  0.936354  0.0
+27 -1.509993  4.137593e-04 -0.673082  0.035327 -0.655419  0.690746  4.0
+28  0.000008 -4.108472e-09  0.000362  0.000004  0.000364 -0.000360  0.0
+29 -1.544333  5.631074e-03 -0.673008  0.039523 -0.653246  0.692769  4.0
+30  0.002904  2.924407e-04 -1.647846  0.238481 -1.528605  1.767086  0.0
+31 -1.318134  1.782135e-03 -1.636367  0.233951 -1.519391  1.753342  4.0
+32  0.002032 -1.056040e-04 -1.267362  0.158561 -1.188082  1.346643  0.0
+33 -1.030198  1.278172e-03 -1.207645  0.139524 -1.137883  1.277407  4.0
+
+            Solver Time GridLevel  Mach
+0   rhoCentralFoam   34        R0  0.60
+1   rhoCentralFoam   34        R0  0.60
+2   rhoCentralFoam   34        R1  0.60
+3   rhoCentralFoam   34        R1  0.60
+4   rhoCentralFoam   34        R2  0.60
+5   rhoCentralFoam   34        R2  0.60
+6   rhoCentralFoam   43        R0  0.90
+7   rhoCentralFoam   43        R0  0.90
+8   rhoCentralFoam   43        R1  0.90
+9   rhoCentralFoam   43        R1  0.90
+10  rhoCentralFoam   43        R2  0.90
+11  rhoCentralFoam   43        R2  0.90
+12  rhoCentralFoam   46        R0  0.99
+13  rhoCentralFoam   46        R0  0.99
+14  rhoCentralFoam   46        R1  0.99
+15  rhoCentralFoam   46        R1  0.99
+16  rhoCentralFoam   46        R2  0.99
+17  rhoCentralFoam   46        R2  0.99
+18  rhoCentralFoam   49        R0  1.10
+19  rhoCentralFoam   49        R0  1.10
+20  rhoCentralFoam   49        R1  1.10
+21  rhoCentralFoam   49        R1  1.10
+22  rhoCentralFoam   49        R2  1.10
+23  rhoCentralFoam   49        R2  1.10
+24  rhoCentralFoam   61        R0  1.67
+25  rhoCentralFoam   61        R0  1.67
+26  rhoCentralFoam   61        R1  1.67
+27  rhoCentralFoam   61        R1  1.67
+28  rhoCentralFoam   61        R2  1.67
+29  rhoCentralFoam   61        R2  1.67
+30  rhoCentralFoam  107        R0  4.51
+31  rhoCentralFoam  107        R0  4.51
+32  rhoCentralFoam  107        R1  4.51
+33  rhoCentralFoam  107        R1  4.51
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{204}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Define the list of solvers and grid levels}
+\PY{n}{solvers} \PY{o}{=} \PY{n}{result}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Solver}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
+\PY{n}{grid\PYZus{}levels} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{R0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{R1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{R2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} Create a function to plot CA, CN, and CM}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}solution}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{solver}\PY{p}{,} \PY{n}{alpha\PYZus{}values}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n+nb}{isinstance}\PY{p}{(}\PY{n}{alpha\PYZus{}values}\PY{p}{,} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{,} \PY{n+nb}{float}\PY{p}{,} \PY{n+nb}{int}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{alpha\PYZus{}values} \PY{o}{=} \PY{p}{[}\PY{n}{alpha\PYZus{}values}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Convert single value to a list}
+    
+    \PY{c+c1}{\PYZsh{} Define marker styles for different alpha values}
+    \PY{n}{markers} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{s}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{D}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{*}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{X}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{H}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Add as many markers as needed}
+    \PY{n}{marker\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{alpha}\PY{p}{:} \PY{n}{markers}\PY{p}{[}\PY{n}{i} \PY{o}{\PYZpc{}} \PY{n+nb}{len}\PY{p}{(}\PY{n}{markers}\PY{p}{)}\PY{p}{]} \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{alpha} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{alpha\PYZus{}values}\PY{p}{)}\PY{p}{\PYZcb{}}
+    
+    \PY{c+c1}{\PYZsh{} Initialize subplots for CA, CN, and CM in a single row}
+    \PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{18}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} 1 row, 3 columns}
+    
+    \PY{c+c1}{\PYZsh{} Loop over each grid level and plot all data in the same plot}
+    \PY{k}{for} \PY{n}{grid\PYZus{}level} \PY{o+ow}{in} \PY{n}{grid\PYZus{}levels}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Filter data for the given solver and grid level}
+        \PY{n}{filtered\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Solver}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{solver}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GridLevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{grid\PYZus{}level}\PY{p}{)}\PY{p}{]}
+        
+        \PY{k}{if} \PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{empty}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No solution for Solver: }\PY{l+s+si}{\PYZob{}}\PY{n}{solver}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{, Grid Level: }\PY{l+s+si}{\PYZob{}}\PY{n}{grid\PYZus{}level}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{continue}
+        
+        \PY{c+c1}{\PYZsh{} Plot data for each angle of attack (AoA)}
+        \PY{k}{for} \PY{n}{alpha} \PY{o+ow}{in} \PY{n}{alpha\PYZus{}values}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} Filter data for the given angle of attack}
+            \PY{n}{alpha\PYZus{}df} \PY{o}{=} \PY{n}{filtered\PYZus{}df}\PY{p}{[}\PY{n}{filtered\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AoA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{alpha}\PY{p}{]}
+            
+            \PY{k}{if} \PY{n}{alpha\PYZus{}df}\PY{o}{.}\PY{n}{empty}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No data for AoA: }\PY{l+s+si}{\PYZob{}}\PY{n}{alpha}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ in Solver: }\PY{l+s+si}{\PYZob{}}\PY{n}{solver}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{, Grid Level: }\PY{l+s+si}{\PYZob{}}\PY{n}{grid\PYZus{}level}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{k}{continue}
+            
+            \PY{c+c1}{\PYZsh{} Plot CA (Cd), CN (Cl), CM (CmPitch) for the current grid level and AoA}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cd}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{alpha\PYZdl{}=}\PY{l+s+s1}{\PYZsq{}} \PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{alpha}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ \PYZhy{} }\PY{l+s+si}{\PYZob{}}\PY{n}{grid\PYZus{}level}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cl}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{alpha\PYZdl{}=}\PY{l+s+s1}{\PYZsq{}} \PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{alpha}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ \PYZhy{} }\PY{l+s+si}{\PYZob{}}\PY{n}{grid\PYZus{}level}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CmPitch}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{alpha\PYZdl{}=}\PY{l+s+s1}{\PYZsq{}} \PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{alpha}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ \PYZhy{} }\PY{l+s+si}{\PYZob{}}\PY{n}{grid\PYZus{}level}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            
+            \PY{c+c1}{\PYZsh{} Add scatter points for each data point}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cd}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{n}{marker\PYZus{}dict}\PY{p}{[}\PY{n}{alpha}\PY{p}{]}\PY{p}{)}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cl}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{n}{marker\PYZus{}dict}\PY{p}{[}\PY{n}{alpha}\PY{p}{]}\PY{p}{)}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CmPitch}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{n}{marker\PYZus{}dict}\PY{p}{[}\PY{n}{alpha}\PY{p}{]}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Set labels and titles}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CA (Cd)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CN (Cl)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{axes}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CM (CmPitch)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        
+            \PY{k}{for} \PY{n}{ax} \PY{o+ow}{in} \PY{n}{axes}\PY{p}{:}
+                \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlim}\PY{p}{(}\PY{l+m+mf}{0.5}\PY{p}{,}\PY{l+m+mf}{4.75}\PY{p}{)}
+                \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach Number}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Coefficient Value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{loc}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{best}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+                \PY{n}{ax}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+
+            \PY{n}{plt}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+
+            \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{solver}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZus{}alpha\PYZus{}}\PY{l+s+si}{\PYZob{}}\PY{n}{alpha}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZus{}CA\PYZus{}CN\PYZus{}CM.eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}    
+
+    \PY{c+c1}{\PYZsh{} Save the plots as EPS files}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{solver}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZus{}CA\PYZus{}CN\PYZus{}CM.eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Plot saved as }\PY{l+s+si}{\PYZob{}}\PY{n}{solver}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZus{}CA\PYZus{}CN\PYZus{}CM.eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Define list of unique AoA values from the dataframe}
+\PY{n}{alpha\PYZus{}values} \PY{o}{=} \PY{n}{result}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AoA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{alpha\PYZus{}values}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Loop through each solver and plot for all grid levels}
+\PY{k}{for} \PY{n}{solver} \PY{o+ow}{in} \PY{n}{solvers}\PY{p}{:}
+    \PY{n}{plot\PYZus{}solution}\PY{p}{(}\PY{n}{result}\PY{p}{,} \PY{n}{solver}\PY{p}{,} \PY{n}{alpha\PYZus{}values}\PY{p}{)}
+    \PY{n}{plot\PYZus{}solution}\PY{p}{(}\PY{n}{result}\PY{p}{,} \PY{n}{solver}\PY{p}{,} \PY{n}{alpha\PYZus{}values}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{n}{plot\PYZus{}solution}\PY{p}{(}\PY{n}{result}\PY{p}{,} \PY{n}{solver}\PY{p}{,} \PY{n}{alpha\PYZus{}values}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}plot\PYZus{}solution(result, solver, alpha\PYZus{}values[2])}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[0. 4.]
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Plot saved as rhoCentralFoam\_CA\_CN\_CM.eps
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Plot saved as rhoCentralFoam\_CA\_CN\_CM.eps
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_6.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Plot saved as rhoCentralFoam\_CA\_CN\_CM.eps
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_9.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{205}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{result0} \PY{o}{=} \PY{n}{result}\PY{p}{[}\PY{n}{result}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{AoA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}
+\PY{n}{result4} \PY{o}{=} \PY{n}{result}\PY{p}{[}\PY{n}{result}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{AoA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{4}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{206}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{rhoCentralFoam}    \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{rhoPimpleFoam}     \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R0} \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R0}  \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R1} \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R1}  \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R2} \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R2}  \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R3} \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R3}  \PY{o}{=} \PY{n}{result0}\PY{p}{[}\PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{207}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Define the grid level (change this to \PYZdq{}R0\PYZdq{}, \PYZdq{}R1\PYZdq{}, \PYZdq{}R2\PYZdq{}, or \PYZdq{}R3\PYZdq{} to select the dataset)}
+\PY{c+c1}{\PYZsh{} From the figures above we can see the trends across different grid levels}
+\PY{c+c1}{\PYZsh{} Typically we would select the finest grid level available, R2 for example}
+\PY{n}{grid\PYZus{}level} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}} 
+
+\PY{c+c1}{\PYZsh{} Assuming rhoCentralFoam datasets are dictionaries or DataFrames}
+\PY{c+c1}{\PYZsh{} Select the corresponding dataset based on the grid level}
+\PY{c+c1}{\PYZsh{} TODO: improve to handle evental rhoPimpleFoam solutions}
+\PY{k}{if} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R0}
+\PY{k}{elif} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R1}
+\PY{k}{elif} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R2}
+\PY{k}{elif} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R3}
+\PY{k}{else}\PY{p}{:}
+    \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Invalid grid level. Please choose from }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, or }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{dataset}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{207}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    LastIter        Cd     Cd(f)     Cd(r)            Cl     Cl(f)     Cl(r)  \textbackslash{}
+2    14656.0  0.302559  0.150589  0.151970 -1.261613e-03  0.001786 -0.003048
+8    15896.0  0.322557  0.161292  0.161265 -4.880946e-04  0.001555 -0.002043
+14   23960.0  0.392739  0.196299  0.196440 -9.675582e-04  0.001394 -0.002361
+20   13885.0  0.437251  0.217474  0.219777 -3.360364e-04  0.001028 -0.001364
+26  100000.0  0.411262  0.204971  0.206291  5.771693e-05  0.001873 -0.001815
+32  300000.0  0.177350  0.088569  0.088781 -8.762325e-07  0.002031 -0.002032
+
+     CmPitch    CmRoll     CmYaw        Cs     Cs(f)     Cs(r)  AoA  \textbackslash{}
+2   0.002417 -0.000691  1.552663 -0.352678  1.376324 -1.729003  0.0
+8   0.001799  0.000013  1.526560 -0.342990  1.355065 -1.698055  0.0
+14  0.001877 -0.000070  1.697907 -0.304270  1.545772 -1.850043  0.0
+20  0.001196 -0.001152  1.192385 -0.202704  1.091033 -1.293737  0.0
+26  0.001844 -0.000660 -0.894155  0.084397 -0.851957  0.936354  0.0
+32  0.002032 -0.000106 -1.267362  0.158561 -1.188082  1.346643  0.0
+
+            Solver Time GridLevel  Mach
+2   rhoCentralFoam   34        R1  0.60
+8   rhoCentralFoam   43        R1  0.90
+14  rhoCentralFoam   46        R1  0.99
+20  rhoCentralFoam   49        R1  1.10
+26  rhoCentralFoam   61        R1  1.67
+32  rhoCentralFoam  107        R1  4.51
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{208}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{yshift}           \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{cn}               \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} 
+\PY{n}{upper\PYZus{}margin}     \PY{o}{=} \PY{n}{cn} \PY{o}{*} \PY{l+m+mf}{1.20} 
+\PY{n}{lower\PYZus{}margin}     \PY{o}{=} \PY{n}{cn} \PY{o}{*} \PY{l+m+mf}{0.80}  
+\PY{n}{variable\PYZus{}margins} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{full}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cn}\PY{p}{)}\PY{p}{,} \PY{l+m+mf}{0.20}\PY{p}{)}
+\PY{n}{error}            \PY{o}{=} \PY{n}{cn} \PY{o}{*} \PY{n}{variable\PYZus{}margins} 
+\PY{n}{error}            \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{error}\PY{p}{)}        
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{209}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cn}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rhoCentralFoam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{200}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{solid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R0[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R0[\PYZdq{}Cl\PYZdq{}], label=\PYZsq{}CN rhoCentralFoam R0\PYZsq{}, s=200, marker=\PYZsq{}o\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}solid\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R1[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R1[\PYZdq{}Cl\PYZdq{}], label=\PYZsq{}CN rhoCentralFoam R1\PYZsq{}, s=200, marker=\PYZsq{}s\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dashed\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R2[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R2[\PYZdq{}Cl\PYZdq{}], label=\PYZsq{}CN rhoCentralFoam R2\PYZsq{}, s=200, marker=\PYZsq{}X\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dashdot\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R3[\PYZdq{}Cl\PYZdq{}], label=f\PYZsq{}\PYZdl{}C\PYZus{}N\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}p\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoPimpleFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}],  rhoPimpleFoam\PYZus{}R3[\PYZdq{}Cl\PYZdq{}],  label=f\PYZsq{}\PYZdl{}C\PYZus{}N\PYZdl{} rhoPimpleFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}\PYZca{}\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{datcom0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MACH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{n}{datcom0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CN}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{+}\PY{n}{yshift}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datcom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add a 20\PYZpc{} margin band}
+\PY{n}{plt}\PY{o}{.}\PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{20}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{ Margin Band}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add vertical bars and annotations for each point}
+\PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cn}\PY{p}{,} \PY{n}{yerr}\PY{o}{=}\PY{n}{error}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{capsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Local Margin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Annotate each margin value above each point}
+\PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{margin} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{variable\PYZus{}margins}\PY{p}{)}\PY{p}{:}
+
+    \PY{c+c1}{\PYZsh{} Annotate upper and lower margins near the error bar}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+   \PY{c+c1}{\PYZsh{} Annotate the actual value at each data point}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{cn}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{cn}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}plt.xlim(0,5)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach Number}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient \PYZdl{}C\PYZus{}N\PYZdl{} as a Function of Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{file\PYZus{}formats} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pdf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{png}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{fmt} \PY{o+ow}{in} \PY{n}{file\PYZus{}formats}\PY{p}{:}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Eris0\PYZus{}CN.}\PY{l+s+si}{\PYZob{}}\PY{n}{fmt}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_18_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{210}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{yshift}           \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{cd}               \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{upper\PYZus{}margin}     \PY{o}{=} \PY{n}{cd} \PY{o}{*} \PY{l+m+mf}{1.20} 
+\PY{n}{lower\PYZus{}margin}     \PY{o}{=} \PY{n}{cd} \PY{o}{*} \PY{l+m+mf}{0.80} 
+\PY{n}{variable\PYZus{}margins} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{full}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cd}\PY{p}{)}\PY{p}{,} \PY{l+m+mf}{0.20}\PY{p}{)}
+\PY{n}{error}            \PY{o}{=} \PY{n}{cd} \PY{o}{*} \PY{n}{variable\PYZus{}margins}
+\PY{n}{error}            \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{cd} \PY{o}{*} \PY{n}{variable\PYZus{}margins}\PY{p}{)} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{211}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rhoCentralFoam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{200}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R0[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R0[\PYZdq{}Cd\PYZdq{}], label=\PYZsq{}CA rhoCentralFoam R0\PYZsq{}, s=200, marker=\PYZsq{}o\PYZsq{}, color=\PYZsq{}r\PYZsq{}, linestyle=\PYZsq{}solid\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R1[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R1[\PYZdq{}Cd\PYZdq{}], label=\PYZsq{}CA rhoCentralFoam R1\PYZsq{}, s=200, marker=\PYZsq{}s\PYZsq{}, color=\PYZsq{}r\PYZsq{}, linestyle=\PYZsq{}dashed\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R2[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R2[\PYZdq{}Cd\PYZdq{}], label=\PYZsq{}CA rhoCentralFoam R2\PYZsq{}, s=200, marker=\PYZsq{}X\PYZsq{}, color=\PYZsq{}r\PYZsq{}, linestyle=\PYZsq{}dashdot\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R3[\PYZdq{}Cd\PYZdq{}], label=f\PYZsq{}\PYZdl{}C\PYZus{}A\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}p\PYZsq{}, color=\PYZsq{}r\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoPimpleFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}],  rhoPimpleFoam\PYZus{}R3[\PYZdq{}Cd\PYZdq{}],  label=f\PYZsq{}\PYZdl{}C\PYZus{}A\PYZdl{} rhoPimpleFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}\PYZca{}\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+
+\PY{c+c1}{\PYZsh{} Old AERO results}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{df\PYZus{}coefficient\PYZus{}map}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{df\PYZus{}coefficient\PYZus{}map}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{old AERO}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{datcom0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MACH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{datcom0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{+}\PY{n}{yshift}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datcom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add a 20\PYZpc{} margin band }
+\PY{n}{plt}\PY{o}{.}\PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{20}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{ Margin Band}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add vertical bars and annotations for each point}
+\PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cd}\PY{p}{,} \PY{n}{yerr}\PY{o}{=}\PY{n}{error}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{capsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Local Margin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Annotate each margin value above each point}
+\PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{margin} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{variable\PYZus{}margins}\PY{p}{)}\PY{p}{:}
+
+    \PY{c+c1}{\PYZsh{} Annotate upper and lower margins near the error bar}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+   \PY{c+c1}{\PYZsh{} Annotate the actual value at each data point}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{cd}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{cd}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlim}\PY{p}{(}\PY{l+m+mf}{0.5}\PY{p}{,}\PY{l+m+mf}{4.75}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach Number}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient \PYZdl{}C\PYZus{}A\PYZdl{} as a Function of Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{file\PYZus{}formats} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pdf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{png}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{fmt} \PY{o+ow}{in} \PY{n}{file\PYZus{}formats}\PY{p}{:}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Eris0\PYZus{}CA.}\PY{l+s+si}{\PYZob{}}\PY{n}{fmt}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_20_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{212}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{yshift}           \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{cm\PYZus{}pitch}         \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{upper\PYZus{}margin}     \PY{o}{=} \PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{l+m+mf}{1.20}  
+\PY{n}{lower\PYZus{}margin}     \PY{o}{=} \PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{l+m+mf}{0.80} 
+\PY{n}{variable\PYZus{}margins} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{full}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cm\PYZus{}pitch}\PY{p}{)}\PY{p}{,} \PY{l+m+mf}{0.20}\PY{p}{)}
+\PY{n}{error}            \PY{o}{=} \PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{n}{variable\PYZus{}margins}
+\PY{n}{error}            \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{n}{variable\PYZus{}margins}\PY{p}{)} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{213}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Option to control whether annotations are displayed}
+\PY{n}{show\PYZus{}annotations} \PY{o}{=} \PY{k+kc}{True}  
+\PY{n}{annotate\PYZus{}means}   \PY{o}{=} \PY{k+kc}{True}   
+\PY{n}{annotate\PYZus{}bounds}  \PY{o}{=} \PY{k+kc}{False}  
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{214}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rhoCentralFoam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{200}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R0[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R0[\PYZdq{}CmPitch\PYZdq{}], label=\PYZsq{}CM rhoCentralFoam R0\PYZsq{}, s=200, marker=\PYZsq{}o\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}solid\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R1[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R1[\PYZdq{}CmPitch\PYZdq{}], label=\PYZsq{}CM rhoCentralFoam R1\PYZsq{}, s=200, marker=\PYZsq{}s\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}dashed\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R2[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R2[\PYZdq{}CmPitch\PYZdq{}], label=\PYZsq{}CM rhoCentralFoam R2\PYZsq{}, s=200, marker=\PYZsq{}X\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}dashdot\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R3[\PYZdq{}CmPitch\PYZdq{}], label=f\PYZsq{}\PYZdl{}C\PYZus{}M\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}p\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoPimpleFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}],  rhoPimpleFoam\PYZus{}R3[\PYZdq{}CmPitch\PYZdq{}],  label=f\PYZsq{}\PYZdl{}C\PYZus{}M\PYZdl{} rhoPimpleFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}\PYZca{}\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{datcom0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MACH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{datcom0}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CM}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{+}\PY{n}{yshift}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datcom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add a 20\PYZpc{} margin band}
+\PY{n}{plt}\PY{o}{.}\PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{20}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{ Margin Band}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add vertical bars and annotations for each point}
+\PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cm\PYZus{}pitch}\PY{p}{,} \PY{n}{yerr}\PY{o}{=}\PY{n}{error}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{capsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Local Margin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{k}{if} \PY{n}{show\PYZus{}annotations}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Annotate each margin value above each point}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{margin} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{variable\PYZus{}margins}\PY{p}{)}\PY{p}{:}
+        \PY{k}{if} \PY{n}{annotate\PYZus{}bounds}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} Annotate upper and lower margins near the error bar}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                         \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                         \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{,}
+                         \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            
+            \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                         \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                         \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{,}
+                         \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{k}{if} \PY{n}{annotate\PYZus{}means}\PY{p}{:}
+           \PY{c+c1}{\PYZsh{} Annotate the actual value at each data point}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{cm\PYZus{}pitch}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                         \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{cm\PYZus{}pitch}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                         \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,}
+                         \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        
+\PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach Number}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient \PYZdl{}C\PYZus{}M\PYZdl{} as a Function of Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{file\PYZus{}formats} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pdf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{png}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{fmt} \PY{o+ow}{in} \PY{n}{file\PYZus{}formats}\PY{p}{:}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Eris0\PYZus{}CM.}\PY{l+s+si}{\PYZob{}}\PY{n}{fmt}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_23_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{215}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} assume a 20\PYZpc{} margin}
+\PY{n}{unmargin} \PY{o}{=} \PY{l+m+mi}{20} \PY{o}{/} \PY{l+m+mi}{100}
+
+\PY{c+c1}{\PYZsh{} Define datasets and properties for each grid level}
+\PY{c+c1}{\PYZsh{} NOTE: this should be consistent with the level shown in figures above}
+\PY{n}{datasets} \PY{o}{=} \PY{p}{\PYZob{}}
+    \PY{c+c1}{\PYZsh{}\PYZdq{}R0\PYZdq{}: rhoCentralFoam\PYZus{}R0,}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{rhoCentralFoam\PYZus{}R1}\PY{p}{,}
+    \PY{c+c1}{\PYZsh{}\PYZdq{}R2\PYZdq{}: rhoCentralFoam\PYZus{}R2}
+    \PY{c+c1}{\PYZsh{}\PYZdq{}R3\PYZdq{}: rhoCentralFoam\PYZus{}R3}
+\PY{p}{\PYZcb{}}
+
+\PY{c+c1}{\PYZsh{} Initialize an empty DataFrame for the results}
+\PY{n}{results\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Loop through datasets}
+\PY{k}{for} \PY{n}{grid\PYZus{}level}\PY{p}{,} \PY{n}{data} \PY{o+ow}{in} \PY{n}{datasets}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n}{data} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None}\PY{p}{:}  \PY{c+c1}{\PYZsh{} Check if data exists for the grid level}
+        \PY{k}{for} \PY{n}{alpha}\PY{p}{,} \PY{n}{group\PYZus{}data} \PY{o+ow}{in} \PY{n}{data}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AoA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} Calculate upper and lower bounds}
+            \PY{n}{group\PYZus{}data} \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Avoid modifying original DataFrame}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl upper}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl lower}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd upper}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd lower}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch upper}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch lower}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Grid Level}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}    \PY{o}{=} \PY{n}{grid\PYZus{}level}  \PY{c+c1}{\PYZsh{} Add grid level as a column}
+
+            \PY{c+c1}{\PYZsh{} Append to results DataFrame}
+            \PY{n}{results\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{results\PYZus{}df}\PY{p}{,} \PY{n}{group\PYZus{}data}\PY{p}{]}\PY{p}{,} \PY{n}{ignore\PYZus{}index}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Display the resulting DataFrame}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{results\PYZus{}df}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Save to CSV (optional)}
+\PY{c+c1}{\PYZsh{}results\PYZus{}df.to\PYZus{}csv(\PYZdq{}Cl\PYZus{}bounds\PYZus{}results.csv\PYZdq{}, index=False)}
+\PY{n}{results\PYZus{}df}\PY{o}{.}\PY{n}{to\PYZus{}json}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{indent}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{lines}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{path\PYZus{}or\PYZus{}buf}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AERO\PYZus{}ERIS\PYZus{}1.1\PYZus{}S123F.json}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{JSON data has been written to }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{AERO\PYZus{}ERIS\PYZus{}1.1\PYZus{}S123F.json}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+   LastIter        Cd     Cd(f)     Cd(r)            Cl     Cl(f)     Cl(r)  \textbackslash{}
+0   14656.0  0.302559  0.150589  0.151970 -1.261613e-03  0.001786 -0.003048
+1   15896.0  0.322557  0.161292  0.161265 -4.880946e-04  0.001555 -0.002043
+2   23960.0  0.392739  0.196299  0.196440 -9.675582e-04  0.001394 -0.002361
+3   13885.0  0.437251  0.217474  0.219777 -3.360364e-04  0.001028 -0.001364
+4  100000.0  0.411262  0.204971  0.206291  5.771693e-05  0.001873 -0.001815
+5  300000.0  0.177350  0.088569  0.088781 -8.762325e-07  0.002031 -0.002032
+
+    CmPitch    CmRoll     CmYaw  {\ldots}  Time  GridLevel  Mach  Cl upper  \textbackslash{}
+0  0.002417 -0.000691  1.552663  {\ldots}    34         R1  0.60 -0.001514
+1  0.001799  0.000013  1.526560  {\ldots}    43         R1  0.90 -0.000586
+2  0.001877 -0.000070  1.697907  {\ldots}    46         R1  0.99 -0.001161
+3  0.001196 -0.001152  1.192385  {\ldots}    49         R1  1.10 -0.000403
+4  0.001844 -0.000660 -0.894155  {\ldots}    61         R1  1.67  0.000069
+5  0.002032 -0.000106 -1.267362  {\ldots}   107         R1  4.51 -0.000001
+
+       Cl lower  Cd upper  Cd lower  CmPitch upper  CmPitch lower  Grid Level
+0 -1.009290e-03  0.363070  0.242047       0.002901       0.001934          R1
+1 -3.904757e-04  0.387069  0.258046       0.002158       0.001439          R1
+2 -7.740466e-04  0.471287  0.314191       0.002253       0.001502          R1
+3 -2.688291e-04  0.524702  0.349801       0.001435       0.000957          R1
+4  4.617354e-05  0.493514  0.329009       0.002212       0.001475          R1
+5 -7.009860e-07  0.212820  0.141880       0.002438       0.001626          R1
+
+[6 rows x 25 columns]
+JSON data has been written to 'AERO\_ERIS\_1.1\_S123F.json'.
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{216}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{rhoCentralFoam}    \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{rhoPimpleFoam}     \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R0} \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R0}  \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R1} \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R1}  \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R2} \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R2}  \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{rhoCentralFoam\PYZus{}R3} \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoCentralFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\PY{n}{rhoPimpleFoam\PYZus{}R3}  \PY{o}{=} \PY{n}{result4}\PY{p}{[}\PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solver}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rhoPimpleFoam}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{result4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{GridLevel}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{217}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Define the grid level (change this to \PYZdq{}R0\PYZdq{}, \PYZdq{}R1\PYZdq{}, \PYZdq{}R2\PYZdq{}, or \PYZdq{}R3\PYZdq{} to select the dataset)}
+\PY{c+c1}{\PYZsh{} From the figures above we can see the trends across different grid levels}
+\PY{c+c1}{\PYZsh{} Typically we would select the finest grid level available, R2 for example}
+\PY{n}{grid\PYZus{}level} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}} 
+
+\PY{c+c1}{\PYZsh{} Assuming rhoCentralFoam datasets are dictionaries or DataFrames}
+\PY{c+c1}{\PYZsh{} Select the corresponding dataset based on the grid level}
+\PY{c+c1}{\PYZsh{} TODO: improve to handle evental rhoPimpleFoam solutions}
+\PY{k}{if} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R0}
+\PY{k}{elif} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R1}
+\PY{k}{elif} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R2}
+\PY{k}{elif} \PY{n}{grid\PYZus{}level} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{rhoCentralFoam\PYZus{}R3}
+\PY{k}{else}\PY{p}{:}
+    \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Invalid grid level. Please choose from }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R0}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R2}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, or }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{R3}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{dataset}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{217}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    LastIter        Cd     Cd(f)     Cd(r)        Cl     Cl(f)     Cl(r)  \textbackslash{}
+3    14155.0  0.302447  0.152065  0.150382 -0.187570 -1.143181  0.955611
+9    16141.0  0.325859  0.164570  0.161289 -0.169483 -1.060768  0.891285
+15   25268.0  0.392630  0.197841  0.194790 -0.165386 -1.057552  0.892166
+21   14538.0  0.437724  0.219291  0.218433 -0.160920 -1.062834  0.901914
+27  100000.0  0.408299  0.204563  0.203736 -0.274131 -1.647058  1.372927
+33  300000.0  0.176468  0.089512  0.086956 -0.182904 -1.121650  0.938746
+
+     CmPitch    CmRoll     CmYaw        Cs     Cs(f)     Cs(r)  AoA  \textbackslash{}
+3  -1.049396  0.000842  1.905480 -0.422629  1.694166 -2.116795  4.0
+9  -0.976026  0.001640  1.881269 -0.413680  1.674429 -2.088109  4.0
+15 -0.974859  0.001525  2.046959 -0.377389  1.858264 -2.235653  4.0
+21 -0.982374  0.000429  1.551417 -0.277156  1.412840 -1.689995  4.0
+27 -1.509993  0.000414 -0.673082  0.035327 -0.655419  0.690746  4.0
+33 -1.030198  0.001278 -1.207645  0.139524 -1.137883  1.277407  4.0
+
+            Solver Time GridLevel  Mach
+3   rhoCentralFoam   34        R1  0.60
+9   rhoCentralFoam   43        R1  0.90
+15  rhoCentralFoam   46        R1  0.99
+21  rhoCentralFoam   49        R1  1.10
+27  rhoCentralFoam   61        R1  1.67
+33  rhoCentralFoam  107        R1  4.51
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{218}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{yshift}           \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{cn}               \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{upper\PYZus{}margin}     \PY{o}{=} \PY{n}{cn} \PY{o}{*} \PY{l+m+mf}{1.20}  
+\PY{n}{lower\PYZus{}margin}     \PY{o}{=} \PY{n}{cn} \PY{o}{*} \PY{l+m+mf}{0.80}  
+\PY{n}{variable\PYZus{}margins} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{full}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cn}\PY{p}{)}\PY{p}{,} \PY{l+m+mf}{0.20}\PY{p}{)}
+\PY{n}{error}            \PY{o}{=} \PY{n}{cn} \PY{o}{*} \PY{n}{variable\PYZus{}margins} 
+\PY{n}{error}            \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{cn} \PY{o}{*} \PY{n}{variable\PYZus{}margins}\PY{p}{)} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{219}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rhoCentralFoam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{200}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R0[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R0[\PYZdq{}Cl\PYZdq{}], label=\PYZsq{}CN rhoCentralFoam R0\PYZsq{}, s=200, marker=\PYZsq{}o\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}solid\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R1[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R1[\PYZdq{}Cl\PYZdq{}], label=\PYZsq{}CN rhoCentralFoam R1\PYZsq{}, s=200, marker=\PYZsq{}s\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dashed\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R2[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R2[\PYZdq{}Cl\PYZdq{}], label=\PYZsq{}CN rhoCentralFoam R2\PYZsq{}, s=200, marker=\PYZsq{}X\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dashdot\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R3[\PYZdq{}Cl\PYZdq{}], label=f\PYZsq{}\PYZdl{}C\PYZus{}N\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}p\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoPimpleFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}],  rhoPimpleFoam\PYZus{}R3[\PYZdq{}Cl\PYZdq{}],  label=f\PYZsq{}\PYZdl{}C\PYZus{}N\PYZdl{} rhoPimpleFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{},  s=200, marker=\PYZsq{}\PYZca{}\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{datcom4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MACH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{n}{datcom4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CN}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{+}\PY{n}{yshift}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datcom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add a 20\PYZpc{} margin band}
+\PY{n}{plt}\PY{o}{.}\PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{20}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{ Margin Band}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add vertical bars and annotations for each point}
+\PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cn}\PY{p}{,} \PY{n}{yerr}\PY{o}{=}\PY{n}{error}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{capsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Local Margin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Annotate each margin value above each point}
+\PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{margin} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{variable\PYZus{}margins}\PY{p}{)}\PY{p}{:}
+    
+    \PY{c+c1}{\PYZsh{} Annotate upper and lower margins near the error bar}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+   \PY{c+c1}{\PYZsh{} Annotate the actual value at each data point}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{cn}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{cn}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach Number}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient \PYZdl{}C\PYZus{}N\PYZdl{} as a Function of Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{file\PYZus{}formats} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pdf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{png}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{fmt} \PY{o+ow}{in} \PY{n}{file\PYZus{}formats}\PY{p}{:}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Eris4\PYZus{}CN.}\PY{l+s+si}{\PYZob{}}\PY{n}{fmt}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_28_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{220}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} fine tuning parameters}
+\PY{n}{yshift}           \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{cd}               \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} here I assume a constant global margin}
+\PY{n}{upper\PYZus{}margin}     \PY{o}{=} \PY{n}{cd} \PY{o}{*} \PY{l+m+mf}{1.20} 
+\PY{n}{lower\PYZus{}margin}     \PY{o}{=} \PY{n}{cd} \PY{o}{*} \PY{l+m+mf}{0.80}  
+\PY{c+c1}{\PYZsh{} here I set a variable local margin}
+\PY{c+c1}{\PYZsh{}variable\PYZus{}margins = np.array([0.20, 0.15, 0.10, 0.15, 0.15, 0.15])}
+\PY{n}{variable\PYZus{}margins} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{full}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cd}\PY{p}{)}\PY{p}{,} \PY{l+m+mf}{0.20}\PY{p}{)}
+\PY{n}{error}            \PY{o}{=} \PY{n}{cd} \PY{o}{*} \PY{n}{variable\PYZus{}margins} 
+\PY{n}{error}            \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{cd} \PY{o}{*} \PY{n}{variable\PYZus{}margins}\PY{p}{)} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{221}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rhoCentralFoam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{200}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R0[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R0[\PYZdq{}Cd\PYZdq{}], label=r\PYZsq{}\PYZdl{}C\PYZus{}A\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}0\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}o\PYZsq{}, color=\PYZsq{}r\PYZsq{}, linestyle=\PYZsq{}solid\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R1[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R1[\PYZdq{}Cd\PYZdq{}], label=r\PYZsq{}\PYZdl{}C\PYZus{}A\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}1\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}s\PYZsq{}, color=\PYZsq{}r\PYZsq{}, linestyle=\PYZsq{}dashed\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R2[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R2[\PYZdq{}Cd\PYZdq{}], label=r\PYZsq{}\PYZdl{}C\PYZus{}A\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}2\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}X\PYZsq{}, color=\PYZsq{}r\PYZsq{}, linestyle=\PYZsq{}dashdot\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R3[\PYZdq{}Cd\PYZdq{}], label=r\PYZsq{}\PYZdl{}C\PYZus{}A\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}p\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoPimpleFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}],  rhoPimpleFoam\PYZus{}R3[\PYZdq{}Cd\PYZdq{}],  label=r\PYZsq{}\PYZdl{}C\PYZus{}A\PYZdl{} rhoPimpleFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{},  s=200, marker=\PYZsq{}\PYZca{}\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{datcom4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MACH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{datcom4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{+}\PY{n}{yshift}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datcom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add a 20\PYZpc{} margin band}
+\PY{n}{plt}\PY{o}{.}\PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{20}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{ Margin Band}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add vertical bars and annotations for each point}
+\PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cd}\PY{p}{,} \PY{n}{yerr}\PY{o}{=}\PY{n}{error}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{capsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Local Margin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Annotate each margin value above each point}
+\PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{margin} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{variable\PYZus{}margins}\PY{p}{)}\PY{p}{:}
+   
+    \PY{c+c1}{\PYZsh{} Annotate upper and lower margins near the error bar}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+   \PY{c+c1}{\PYZsh{} Annotate the actual value at each data point}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{cd}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{cd}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach Number}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient \PYZdl{}C\PYZus{}A\PYZdl{} as a Function of Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{file\PYZus{}formats} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pdf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{png}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{fmt} \PY{o+ow}{in} \PY{n}{file\PYZus{}formats}\PY{p}{:}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Eris4\PYZus{}CA.}\PY{l+s+si}{\PYZob{}}\PY{n}{fmt}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_30_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{222}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{yshift}           \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{cm\PYZus{}pitch}         \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} here I assume a constant global margin}
+\PY{n}{upper\PYZus{}margin}     \PY{o}{=} \PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{l+m+mf}{1.20}  
+\PY{n}{lower\PYZus{}margin}     \PY{o}{=} \PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{l+m+mf}{0.80} 
+\PY{c+c1}{\PYZsh{} here I assume a variable local margin}
+\PY{c+c1}{\PYZsh{}variable\PYZus{}margins = np.array([0.20, 0.15, 0.10, 0.15, 0.15, 0.15])}
+\PY{n}{variable\PYZus{}margins} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{full}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cm\PYZus{}pitch}\PY{p}{)}\PY{p}{,} \PY{l+m+mf}{0.20}\PY{p}{)}
+\PY{n}{error}            \PY{o}{=} \PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{n}{variable\PYZus{}margins} 
+\PY{n}{error}            \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{cm\PYZus{}pitch} \PY{o}{*} \PY{n}{variable\PYZus{}margins}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{223}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rhoCentralFoam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{200}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R0[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R0[\PYZdq{}CmPitch\PYZdq{}], label=\PYZsq{}CM rhoCentralFoam R0\PYZsq{}, s=200, marker=\PYZsq{}o\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}solid\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R1[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R1[\PYZdq{}CmPitch\PYZdq{}], label=\PYZsq{}CM rhoCentralFoam R1\PYZsq{}, s=200, marker=\PYZsq{}s\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}dashed\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R2[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R2[\PYZdq{}CmPitch\PYZdq{}], label=\PYZsq{}CM rhoCentralFoam R2\PYZsq{}, s=200, marker=\PYZsq{}X\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}dashdot\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoCentralFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}], rhoCentralFoam\PYZus{}R3[\PYZdq{}CmPitch\PYZdq{}], label=f\PYZsq{}\PYZdl{}C\PYZus{}M\PYZdl{} rhoCentralFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}p\PYZsq{}, color=\PYZsq{}g\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+\PY{c+c1}{\PYZsh{}plt.scatter(rhoPimpleFoam\PYZus{}R3[\PYZdq{}Mach\PYZdq{}],  rhoPimpleFoam\PYZus{}R3[\PYZdq{}CmPitch\PYZdq{}],  label=f\PYZsq{}\PYZdl{}C\PYZus{}M\PYZdl{} rhoPimpleFoam \PYZdl{}R\PYZus{}3\PYZdl{}\PYZsq{}, s=200, marker=\PYZsq{}\PYZca{}\PYZsq{}, color=\PYZsq{}b\PYZsq{}, linestyle=\PYZsq{}dotted\PYZsq{})}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{datcom4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MACH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{datcom4}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CM}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{+}\PY{n}{yshift}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datcom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add a 20\PYZpc{} margin band }
+\PY{n}{plt}\PY{o}{.}\PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{20}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{ Margin Band}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add vertical bars and annotations for each point}
+\PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{cm\PYZus{}pitch}\PY{p}{,} \PY{n}{yerr}\PY{o}{=}\PY{n}{error}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{capsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Local Margin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Annotate each margin value above each point}
+\PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{margin} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{variable\PYZus{}margins}\PY{p}{)}\PY{p}{:}
+
+    \PY{c+c1}{\PYZsh{} Annotate upper and lower margins near the error bar}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{upper\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{lower\PYZus{}margin}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+   \PY{c+c1}{\PYZsh{} Annotate the actual value at each data point}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{cm\PYZus{}pitch}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                 \PY{p}{(}\PY{n}{dataset}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mach}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{cm\PYZus{}pitch}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{textcoords}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{offset points}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,}
+                 \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+\PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mach Number}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Coefficient \PYZdl{}C\PYZus{}M\PYZdl{} as a Function of Mach}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{22}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{file\PYZus{}formats} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pdf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{eps}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{png}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{fmt} \PY{o+ow}{in} \PY{n}{file\PYZus{}formats}\PY{p}{:}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Eris4\PYZus{}CM.}\PY{l+s+si}{\PYZob{}}\PY{n}{fmt}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The PostScript backend does not support transparency; partially transparent
+artists will be rendered opaque.
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_32_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{224}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Convert DataFrame to JSON}
+\PY{c+c1}{\PYZsh{}json\PYZus{}data = df.to\PYZus{}json(orient=\PYZsq{}records\PYZsq{})}
+\PY{c+c1}{\PYZsh{} json\PYZus{}data = df.to\PYZus{}json(orient=\PYZsq{}index\PYZsq{})}
+\PY{c+c1}{\PYZsh{} json\PYZus{}data = df.to\PYZus{}json(orient=\PYZsq{}columns\PYZsq{})}
+\PY{c+c1}{\PYZsh{} json\PYZus{}data = df.to\PYZus{}json(orient=\PYZsq{}split\PYZsq{})}
+\PY{c+c1}{\PYZsh{} json\PYZus{}data = df.to\PYZus{}json(orient=\PYZsq{}table\PYZsq{})}
+\PY{c+c1}{\PYZsh{}result.to\PYZus{}json(orient=\PYZsq{}records\PYZsq{}, indent=4, lines=False, path\PYZus{}or\PYZus{}buf=\PYZsq{}AERO\PYZus{}ERIS\PYZus{}1.1\PYZus{}S123F.json\PYZsq{})}
+\PY{c+c1}{\PYZsh{}print(\PYZdq{}JSON data has been written to \PYZsq{}AERO\PYZus{}ERIS\PYZus{}1.1\PYZus{}S123F.json\PYZsq{}.\PYZdq{})}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{225}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Define datasets and properties for each grid level}
+\PY{n}{datasets} \PY{o}{=} \PY{p}{\PYZob{}}
+    \PY{c+c1}{\PYZsh{}\PYZdq{}R0\PYZdq{}: rhoCentralFoam\PYZus{}R0,}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{rhoCentralFoam\PYZus{}R1}\PY{p}{,}
+    \PY{c+c1}{\PYZsh{}\PYZdq{}R\PYZdq{}: rhoCentralFoam\PYZus{}R2}
+    \PY{c+c1}{\PYZsh{}\PYZdq{}R3\PYZdq{}: rhoCentralFoam\PYZus{}R3}
+\PY{p}{\PYZcb{}}
+
+\PY{c+c1}{\PYZsh{} Loop through datasets}
+\PY{k}{for} \PY{n}{grid\PYZus{}level}\PY{p}{,} \PY{n}{data} \PY{o+ow}{in} \PY{n}{datasets}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n}{data} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None}\PY{p}{:}  \PY{c+c1}{\PYZsh{} Check if data exists for the grid level}
+        \PY{k}{for} \PY{n}{alpha}\PY{p}{,} \PY{n}{group\PYZus{}data} \PY{o+ow}{in} \PY{n}{data}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AoA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} Calculate upper and lower bounds}
+            \PY{n}{group\PYZus{}data} \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Avoid modifying original DataFrame}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl upper}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl lower}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd upper}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd lower}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}      \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cd}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch upper}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch lower}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CmPitch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{unmargin}\PY{p}{)}
+            \PY{n}{group\PYZus{}data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Grid Level}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}    \PY{o}{=} \PY{n}{grid\PYZus{}level}  \PY{c+c1}{\PYZsh{} Add grid level as a column}
+
+            \PY{c+c1}{\PYZsh{} Append to results DataFrame for alpha = 0 deg}
+            \PY{n}{results\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{results\PYZus{}df}\PY{p}{,} \PY{n}{group\PYZus{}data}\PY{p}{]}\PY{p}{,} \PY{n}{ignore\PYZus{}index}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Display the resulting DataFrame}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{results\PYZus{}df}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Save to CSV (optional)}
+\PY{n}{results\PYZus{}df}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{AERO\PYZus{}S123F.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Export final AERO database file (.json)}
+\PY{n}{results\PYZus{}df}\PY{o}{.}\PY{n}{to\PYZus{}json}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{indent}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{lines}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{path\PYZus{}or\PYZus{}buf}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AERO\PYZus{}ERIS\PYZus{}1.1\PYZus{}S123F.json}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{JSON data has been written to }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{AERO\PYZus{}ERIS\PYZus{}1.1\PYZus{}S123F.json}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+    LastIter        Cd     Cd(f)     Cd(r)            Cl     Cl(f)     Cl(r)  \textbackslash{}
+0    14656.0  0.302559  0.150589  0.151970 -1.261613e-03  0.001786 -0.003048
+1    15896.0  0.322557  0.161292  0.161265 -4.880946e-04  0.001555 -0.002043
+2    23960.0  0.392739  0.196299  0.196440 -9.675582e-04  0.001394 -0.002361
+3    13885.0  0.437251  0.217474  0.219777 -3.360364e-04  0.001028 -0.001364
+4   100000.0  0.411262  0.204971  0.206291  5.771693e-05  0.001873 -0.001815
+5   300000.0  0.177350  0.088569  0.088781 -8.762325e-07  0.002031 -0.002032
+6    14155.0  0.302447  0.152065  0.150382 -1.875704e-01 -1.143181  0.955611
+7    16141.0  0.325859  0.164570  0.161289 -1.694830e-01 -1.060768  0.891285
+8    25268.0  0.392630  0.197841  0.194790 -1.653857e-01 -1.057552  0.892166
+9    14538.0  0.437724  0.219291  0.218433 -1.609200e-01 -1.062834  0.901914
+10  100000.0  0.408299  0.204563  0.203736 -2.741315e-01 -1.647058  1.372927
+11  300000.0  0.176468  0.089512  0.086956 -1.829043e-01 -1.121650  0.938746
+
+     CmPitch    CmRoll     CmYaw  {\ldots}  Time  GridLevel  Mach  Cl upper  \textbackslash{}
+0   0.002417 -0.000691  1.552663  {\ldots}    34         R1  0.60 -0.001514
+1   0.001799  0.000013  1.526560  {\ldots}    43         R1  0.90 -0.000586
+2   0.001877 -0.000070  1.697907  {\ldots}    46         R1  0.99 -0.001161
+3   0.001196 -0.001152  1.192385  {\ldots}    49         R1  1.10 -0.000403
+4   0.001844 -0.000660 -0.894155  {\ldots}    61         R1  1.67  0.000069
+5   0.002032 -0.000106 -1.267362  {\ldots}   107         R1  4.51 -0.000001
+6  -1.049396  0.000842  1.905480  {\ldots}    34         R1  0.60 -0.225084
+7  -0.976026  0.001640  1.881269  {\ldots}    43         R1  0.90 -0.203380
+8  -0.974859  0.001525  2.046959  {\ldots}    46         R1  0.99 -0.198463
+9  -0.982374  0.000429  1.551417  {\ldots}    49         R1  1.10 -0.193104
+10 -1.509993  0.000414 -0.673082  {\ldots}    61         R1  1.67 -0.328958
+11 -1.030198  0.001278 -1.207645  {\ldots}   107         R1  4.51 -0.219485
+
+        Cl lower  Cd upper  Cd lower  CmPitch upper  CmPitch lower  Grid Level
+0  -1.009290e-03  0.363070  0.242047       0.002901       0.001934          R1
+1  -3.904757e-04  0.387069  0.258046       0.002158       0.001439          R1
+2  -7.740466e-04  0.471287  0.314191       0.002253       0.001502          R1
+3  -2.688291e-04  0.524702  0.349801       0.001435       0.000957          R1
+4   4.617354e-05  0.493514  0.329009       0.002212       0.001475          R1
+5  -7.009860e-07  0.212820  0.141880       0.002438       0.001626          R1
+6  -1.500563e-01  0.362936  0.241958      -1.259275      -0.839517          R1
+7  -1.355864e-01  0.391030  0.260687      -1.171232      -0.780821          R1
+8  -1.323086e-01  0.471157  0.314104      -1.169831      -0.779887          R1
+9  -1.287360e-01  0.525269  0.350179      -1.178849      -0.785900          R1
+10 -2.193052e-01  0.489959  0.326639      -1.811992      -1.207994          R1
+11 -1.463234e-01  0.211761  0.141174      -1.236238      -0.824158          R1
+
+[12 rows x 25 columns]
+JSON data has been written to 'AERO\_ERIS\_1.1\_S123F.json'.
+    \end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

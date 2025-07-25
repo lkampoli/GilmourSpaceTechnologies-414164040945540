@@ -1,0 +1,693 @@
+% Options for packages loaded elsewhere
+%\PassOptionsToPackage{unicode}{hyperref}
+%\PassOptionsToPackage{hyphens}{url}
+%
+%\documentclass[
+%]{article}
+%\usepackage{amsmath,amssymb}
+%\usepackage{lmodern}
+%\usepackage{iftex}
+%\ifPDFTeX
+%  \usepackage[T1]{fontenc}
+%  \usepackage[utf8]{inputenc}
+%  \usepackage{textcomp} % provide euro and other symbols
+%\else % if luatex or xetex
+%  \usepackage{unicode-math}
+%  \defaultfontfeatures{Scale=MatchLowercase}
+%  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+%\fi
+%% Use upquote if available, for straight quotes in verbatim environments
+%\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+%\IfFileExists{microtype.sty}{% use microtype if available
+%  \usepackage[]{microtype}
+%  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+%}{}
+%\makeatletter
+%\@ifundefined{KOMAClassName}{% if non-KOMA class
+%  \IfFileExists{parskip.sty}{%
+%    \usepackage{parskip}
+%  }{% else
+%    \setlength{\parindent}{0pt}
+%    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+%}{% if KOMA class
+%  \KOMAoptions{parskip=half}}
+%\makeatother
+%\usepackage{xcolor}
+%\usepackage{longtable,booktabs,array}
+%\usepackage{calc} % for calculating minipage widths
+%% Correct order of tables after \paragraph or \subparagraph
+%\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+%\makeatother
+%% Allow footnotes in longtable head/foot
+%\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+%\makesavenoteenv{longtable}
+%\usepackage{graphicx}
+%\makeatletter
+%\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+%\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+%\makeatother
+%% Scale images if necessary, so that they will not overflow the page
+%% margins by default, and it is still possible to overwrite the defaults
+%% using explicit options in \includegraphics[width, height, ...]{}
+%\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+%% Set default figure placement to htbp
+%\makeatletter
+%\def\fps@figure{htbp}
+%\makeatother
+%\setlength{\emergencystretch}{3em} % prevent overfull lines
+%\providecommand{\tightlist}{%
+%  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+%\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+%\ifLuaTeX
+%  \usepackage{selnolig}  % disable illegal ligatures
+%\fi
+%\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+%\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+%\urlstyle{same} % disable monospaced font for URLs
+%\hypersetup{
+%  pdftitle={Examining Spatial (Grid) Convergence},
+%  hidelinks,
+%  pdfcreator={LaTeX via pandoc}}
+%
+%\title{Examining Spatial (Grid) Convergence}
+%\author{}
+%\date{}
+%
+%\begin{document}
+%\maketitle
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\endhead
+\begin{minipage}[t]{\linewidth}\raggedright
+%\includegraphics{Examining Spatial (Grid) Convergence_files/title2.gif}
+\href{https://www.grc.nasa.gov/www/wind/valid/homepage.html}{\textbf{V\&V
+Home}} ~ ~ ~
+\href{https://www.grc.nasa.gov/www/wind/valid/archive.html}{\textbf{Archive}}
+~ ~ ~
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/tutorial.html}{\textbf{Tutorial}}
+
+\hypertarget{examining-spatial-grid-convergence}{%
+\subsection{Examining Spatial (Grid)
+Convergence}\label{examining-spatial-grid-convergence}}
+
+\hypertarget{introduction}{%
+\subsubsection{Introduction}\label{introduction}}
+
+The examination of the spatial convergence of a simulation is a
+straight-forward method for determining the \emph{ordered}
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/errors.html}{discretization
+error} in a CFD simulation. The method involves performing the
+simulation on two or more successively finer grids. The term \emph{grid
+convergence study} is equivalent to the commonly used term \emph{grid
+refinement study}.
+
+As the grid is refined (grid cells become smaller and the number of
+cells in the flow domain increase) and the time step is refined
+(reduced) the spatial and temporal discretization errors, respectively,
+should asymptotically approaches zero, excluding computer round-off
+error.
+
+Methods for examining the spatial and temporal convergence of CFD
+simulations are presented in the book by
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/bibliog.html\#Roach94}{Roache}.
+They are based on use of Richardson\textquotesingle s extrapolation. A
+summary of the method is presented here.
+
+A general discussion of
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/errors.html}{errors
+in CFD computations} is available for background.
+
+We will mostly likely want to determine the error band for the
+engineering quantities obtained from the finest grid solution. However,
+if the CFD simulations are part of a design study that may require tens
+or hundreds of simulations, we may want to use one of the coarser grids.
+Thus we may also want to be able to determine the error on the coarser
+grid.
+
+\hypertarget{grid-considerations-for-a-grid-convergence-study}{%
+\subsubsection{Grid Considerations for a Grid Convergence
+Study}\label{grid-considerations-for-a-grid-convergence-study}}
+
+The easiest approach for generating the series of grids is to generate a
+grid with what one would consider \emph{fine} grid spacing, perhaps
+reaching the upper limit of one\textquotesingle s tolerance for
+generating a grid or waiting for the computation on that grid to
+converge. Then coarser grids can be obtained by removing every other
+grid line in each coordinate direction. This can be continued to create
+additional levels of coarser grids. In generating the fine grid, one can
+build in the \textbf{n} levels of coarser grids by making sure that the
+number of grid points in each coordinate direction satisfies the
+relation
+
+\textbf{N = 2\textsuperscript{n} m + 1}
+
+where \textbf{m} is an integer. For example, if two levels of coarser
+grids are desired (i.e. fine, medium, and coarse grids) then the number
+of grid points in each coordinate direction must equal \textbf{4 m + 1}.
+The \textbf{m} may be different for each coordinate direction.
+
+The \href{http://www.grc.nasa.gov/WWW/winddocs}{WIND} code has a
+\href{http://www.grc.nasa.gov/WWW/winddocs/user/keywords/sequence.html}{grid
+sequencing control} that will solve the solution on the coarser grid
+without having to change the grid input file, boundary condition
+settings, or the input data file. Further, the converged solution on the
+coarser grid then can be used directly as the initial solution on the
+finer grid. This option was originally used to speed up convergence of
+solutions; however, can be used effectively for a grid convergence
+study.
+
+It is not necessary to halve the number of grid points in each
+coordinate direction to obtain the coarser grid. \emph{Non-integer} grid
+refinement or coarsening can be used. This may be desired since
+\emph{halfing} a grid may put the solution out of the asymptotic range.
+Non-integer grid refinement or coarsening will require the generation of
+a new grid. It is important to maintain the same grid generation
+parameters as the original grid. One approach is to select several grid
+spacings as reference grid spacings. One should be the grid spacing
+normal to the walls. Others may be spacings at flow boundaries, at
+junctures in the geometry, or at zonal interfaces. Upon picking the
+ratio as which the grid is to be refined or coarsened, this same ratio
+is applied to these spacings. The number of grid points are then
+adjusted according to grid quality parameters, such as grid spacing
+ratio limits. The surface and volume grids are then generated using the
+same methods as the original grid. The grid refinement ratio should be a
+minimum of \textbf{r \textgreater= 1.1} to allow the discretization
+error to be differentiated from other error sources (iterative
+convergence errors, computer round-off, etc...).
+
+\hypertarget{order-of-grid-convergence}{%
+\subsubsection{Order of Grid
+Convergence}\label{order-of-grid-convergence}}
+
+The order of grid convergence involves the behavior of the solution
+error defined as the difference between the discrete solution and the
+exact solution,
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_error1.gif}
+
+where \textbf{C} is a constant, \textbf{h} is some measure of grid
+spacing, and \textbf{p} is the order of convergence. A "second-order"
+solution would have \textbf{p = 2}.
+
+A CFD code uses a numerical algorithm that will provide a
+\emph{theoretical order of convergence}; however, the boundary
+conditions, numerical models, and grid will reduce this order so that
+the \emph{observed order of convergence} will likely be lower.
+
+Neglecting higher-order terms and taking the logarithm of both sides of
+the above equation results in:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_logerror.gif}
+
+The order of convergence \textbf{p} can be obtained from the slope of
+the curve of \textbf{log(E)} versus \textbf{log(h)}. If such data points
+are available, the slope can be read from the graph or the slope can be
+computed from a least-squares fit of the data. The least-squares will
+likely be inaccurate if there are only a few data points.
+
+A more direct evaluation of \textbf{p} can be obtained from three
+solutions using a constant grid refinement ratio \textbf{r},
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_porder1.gif}
+
+The \emph{order of accuracy} is determined by the order of the leading
+term of the \emph{truncation error} and is represented with respect to
+the scale of the discretization, \textbf{h}. The \emph{local order of
+accuracy} is the order for the stencil representing the discretization
+of the equation at one location in the grid. The \emph{global order of
+accuracy} considers the propagation and accumulation of errors outside
+the stencil. This propagation causes the global order of accuracy to be,
+in general, one degree less than the local order of accuracy. The order
+of accuracy of the boundary conditions can be one order of accuracy
+lower than the interior order of accuracy without degrading the overall
+global accuracy.
+
+\hypertarget{asymptotic-range-of-convergence}{%
+\subsubsection{Asymptotic Range of
+Convergence}\label{asymptotic-range-of-convergence}}
+
+Assessing the accuracy of code and caluculations requires that the grid
+is sufficiently refined such that the solution is in the asymptotic
+range of convergence. The asymptotic range of convergence is obtained
+when the grid spacing is such that the various grid spacings \textbf{h}
+and errors \textbf{E} result in the constancy of \textbf{C},
+
+\textbf{C = E / h\textsuperscript{p}}
+
+Another check of the asymptotic range will be discussed in the section
+on the grid convergence index.
+
+\hypertarget{richardson-extrapolation}{%
+\subsubsection{Richardson
+Extrapolation}\label{richardson-extrapolation}}
+
+Richardson extrapolation is a method for obtaining a higher-order
+estimate of the continuum value (value at zero grid spacing) from a
+series of lower-order discrete values.
+
+A simulation will yield a quantity \textbf{f} that can be expressed in a
+general form by the series expansion:
+
+\textbf{f = f\textsubscript{h=0} + g\textsubscript{1} h +
+g\textsubscript{2} h\textsuperscript{2} + g\textsubscript{3}
+h\textsuperscript{3} + ...}
+
+where \textbf{h} is the grid spacing and the functions
+\textbf{g\textsubscript{1}}, \textbf{g\textsubscript{2}}, and
+\textbf{g\textsubscript{3}} are independent of the grid spacing. The
+quantity \textbf{f} is considered "second-order" if
+\textbf{g\textsubscript{1} = 0.0}. The \textbf{f\textsubscript{h=0}} is
+the continuum value at zero grid spacing.
+
+If one assumes a second-order solution and has computed \textbf{f} on
+two grids of spacing \textbf{h\textsubscript{1}} and
+\textbf{h\textsubscript{2}} with \textbf{h\textsubscript{1}} being the
+finer (smaller) spacing, then one can write two equations for the above
+expansion, neglect third-order and higher terms, and solve for
+\textbf{f\textsubscript{h=0}} to estimate the continuum value,
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_rich1.gif}
+
+where the grid refinement ratio is:
+
+\textbf{r = h\textsubscript{2} / h\textsubscript{1}}
+
+The Richardson extrapolation can be generalized for a \textbf{p-th}
+order methods and \textbf{r}-value of grid ratio (which does not have to
+be an integer) as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_rich2.gif}
+
+Traditionally, Richardson extrapolation has been used with grid
+refinement ratios of \textbf{r = 2}. Thus, the above equation simplifies
+to:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_rich3.gif}
+
+In theory, the above equations for the Richardson extrapolation will
+provide a fourth-order estimate of \textbf{f\textsubscript{h=0}}, if
+\textbf{f\textsubscript{1}} and \textbf{f\textsubscript{2}} were
+computed using exactly second-order methods. Otherwise, it will be a
+third-order estimate. In general, we will consider
+\textbf{f\textsubscript{h=0}} to be \textbf{p+1} order accurate.
+Richardson extrapolation can be applied for the solution at each grid
+point, or to solution functionals, such as pressure recovery or drag.
+This assumes that the solution is globally second-order in addition to
+locally second-order and that the solution functionals were computed
+using consistent second-order methods. Other cautions with using
+Richardson extrapolation (non-conservative, amplification of round-off
+error, etc...) are discussed in the book by
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/bibliog.html\#Roachebook}{Roache}.
+
+For our purposes we will assume \textbf{f} is a solution functional
+(i.e. pressure recovery). The \textbf{f\textsubscript{h=0}} is then as
+an estimate of \textbf{f} in the limit as the grid spacing goes to zero.
+One use of \textbf{f\textsubscript{h=0}} is to report the value as the
+an improved estimate of \textbf{f\textsubscript{1}} from the CFD study;
+however, one has to understand the caveats mentioned above that go along
+with that value.
+
+The other use of \textbf{f\textsubscript{h=0}} is to obtain an estimate
+of the discretization error that bands \textbf{f} obtained from the CFD.
+This use will now be examined.
+
+The difference between \textbf{f\textsubscript{1}} and
+\textbf{f\textsubscript{h=0}} is one error estimator; however, this
+requires consideration of the caveats attached to
+\textbf{f\textsubscript{h=0}}.
+
+We will focus on using \textbf{f\textsubscript{1}} and
+\textbf{f\textsubscript{2}} to obtain an error estimate. Examining the
+generalized Richardson extrapolation equation above, the second term on
+the right-hand side can be considered to be an an error estimator of
+\textbf{f\textsubscript{1}}. The equation can be expressed as:
+
+\textbf{A\textsubscript{1} = E\textsubscript{1} + O(
+h\textsuperscript{p+1}, E\textsubscript{1}\textsuperscript{2})}
+
+where \textbf{A\textsubscript{1}} is the actual fractional error defined
+as:
+
+\textbf{A\textsubscript{1} = ( f\textsubscript{1} - f\textsubscript{h=0}
+) / f\textsubscript{h=0}}
+
+and \textbf{E\textsubscript{1}} is the estimated fractional error for
+\textbf{f\textsubscript{1}} defined as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_eerror1.gif}
+
+where the relative error is defined as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_eps1.gif}
+
+This quantity should not be used as an error estimator since it does not
+take into account \textbf{r} or \textbf{p}. This may lead to an
+underestimation or overestimation of the error. One could make this
+quantity artificially small by simply using a grid refinement ratio
+\textbf{r} close to 1.0.
+
+The estimated fractional error \textbf{E\textsubscript{1}} is an
+\emph{ordered} error estimator and a good approximation of the
+discretization error on the fine grid if \textbf{f\textsubscript{1}} and
+\textbf{f\textsubscript{2}} were obtained with good accuracy (i.e.
+\textbf{E\textsubscript{1}\textless1}). The value of
+\textbf{E\textsubscript{1}} may be meaningless if
+\textbf{f\textsubscript{1}} and \textbf{f\textsubscript{h=0}} are zero
+or very small relative to
+\textbf{f\textsubscript{2}-f\textsubscript{1}}. If such is the case,
+then another normalizing value should be used in place of
+\textbf{f\textsubscript{1}}.
+
+If a large number of CFD computations are to be performed (i.e for a DOE
+study), one may wish to use the coarser grid with
+\textbf{h\textsubscript{2}}. We will then want to estimate the error on
+the coarser grid. The Richardson extrapolation can be expressed as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_rich4.gif}
+
+The estimated fractional error for \textbf{f\textsubscript{2}} is
+defined as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_eerror2.gif}
+
+Richardson extrapolation is based on a Taylor series representation as
+indicated in Eqn. \textbackslash ref\{eq:series\}. If there are shocks
+and other discontinuities present, the Richardson extrapolation is
+invalid in the region of the discontinuity. It is still felt that it
+applies to solution functionals computed from the entire flow field.
+
+\hypertarget{grid-convergence-index-gci}{%
+\subsubsection{Grid Convergence Index
+(GCI)}\label{grid-convergence-index-gci}}
+
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/bibliog.html\#Roach94}{Roache}
+suggests a grid convergence index \textbf{GCI} to provide a consistent
+manner in reporting the results of grid convergence studies and perhaps
+provide an error band on the grid convergence of the solution. The
+\textbf{GCI} can be computed using two levels of grid; however, three
+levels are recommended in order to accurately estimate the order of
+convergence and to check that the solutions are within the asymptotic
+range of convergence.
+
+A consistent numerical analysis will provide a result which approaches
+the actual result as the grid resolution approaches zero. Thus, the
+discretized equations will approach the solution of the actual
+equations. One significant issue in numerical computations is what level
+of grid resolution is appropriate. This is a function of the flow
+conditions, type of analysis, geometry, and other variables. One is
+often left to start with a grid resolution and then conduct a series of
+grid refinements to assess the effect of grid resolution. This is known
+as a grid refinement study.
+
+One must recognize the distinction between a numerical result which
+approaches an asymptotic numerical value and one which approaches the
+true solution. It is hoped that as the grid is refined and resolution
+improves that the computed solution will not change much and approach an
+asymptotic value (i.e. the true numerical solution). There still may be
+error between this asymptotic value and the true physical solution to
+the equations.
+
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/bibliog.html\#Roach94}{Roache}
+has provided a methodology for the uniform reporting of grid refinement
+studies. "The basic idea is to approximately relate the results from any
+grid refinement test to the expected results from a grid doubling using
+a second-order method. The \textbf{GCI} is based upon a grid refinement
+error estimator derived from the theory of generalized Richardson
+Extrapolation. It is recommended for use whether or not Richardson
+Extrapolation is actually used to improve the accuracy, and in some
+cases even if the conditions for the theory do not strictly hold." The
+object is to provide a measure of uncertainty of the grid convergence.
+
+The \textbf{GCI} is a measure of the percentage the computed value is
+away from the value of the asymptotic numerical value. It indicates an
+error band on how far the solution is from the asymptotic value. It
+indicates how much the solution would change with a further refinement
+of the grid. A small value of \textbf{GCI} indicates that the
+computation is within the asymptotic range.
+
+The \textbf{GCI} on the fine grid is defined as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_gcifine1.gif}
+
+where \textbf{F\textsubscript{s}} is a factor of safety. The refinement
+may be spatial or in time. The factor of safety is recommended to be
+\textbf{F\textsubscript{s}=3.0} for comparisons of two grids and
+\textbf{F\textsubscript{s}=1.25} for comparisons over three or more
+grids. The higher factor of safety is recommended for reporting purposes
+and is quite conservative of the actual errors.
+
+When a design or analysis activity will involve many CFD simulations
+(i.e. DOE study), one may want to use the coarser grid
+\textbf{h\textsubscript{2}}. It is then necessary to quantify the error
+for the coarser grid. The \textbf{GCI} for the coarser grid is defined
+as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_gcicoarse1.gif}
+
+It is important that each grid level yield solutions that are in the
+asymptotic range of convergence for the computed solution. This can be
+checked by observing two \textbf{GCI} values as computed over three
+grids,
+
+\textbf{GCI\textsubscript{23} = r\textsuperscript{p}
+GCI\textsubscript{12}}
+
+\hypertarget{required-grid-resolution}{%
+\subsubsection{Required Grid
+Resolution}\label{required-grid-resolution}}
+
+If a desired accuracy level is known and results from the grid
+resolution study are available, one can then estimate the grid
+resolution required to obtain the desired level of accuracy,
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_rstar.gif}
+
+\hypertarget{independent-coordinate-refinement-and-mixed-order-methods}{%
+\subsubsection{Independent Coordinate Refinement and Mixed Order
+Methods}\label{independent-coordinate-refinement-and-mixed-order-methods}}
+
+The grid refinement ratio assumes that the refinement ratio \textbf{r}
+applies equally in all coordinate directions \textbf{(i,j,k)} for
+steady-state solutions and also time \textbf{t} for time-dependent
+solutions. If this is not the case, then the grid convergence indices
+can be computed for each direction independently and then added to give
+the overall grid convergence index,
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_gcisum.gif}
+
+\hypertarget{effective-grid-refinement-ratio}{%
+\subsubsection{Effective Grid Refinement
+Ratio}\label{effective-grid-refinement-ratio}}
+
+If one generates a finer or coarser grid and is unsure of the value of
+grid refinement ratio to use, one can compute an effective grid
+refinement ratio as:
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/eq_reffective.gif}
+
+where \textbf{N} is the total number of grid points used for the grid
+and \textbf{D} is the dimension of the flow domain. This effective grid
+refinement ratio can also be used for unstructured grids.
+
+\hypertarget{example-grid-convergence-study}{%
+\subsubsection{Example Grid Convergence
+Study}\label{example-grid-convergence-study}}
+
+The following example demonstrates the application of the above
+procedures in conducting a grid convergence study. The objective of the
+CFD analysis was to determine the pressure recovery for an inlet. The
+flow field is computed on three grids, each with twice the number of
+grid points in the \textbf{i} and \textbf{j} coordinate directions as
+the previous grid. The number of grid points in the \textbf{k} direction
+remains the same. Since the flow is axisymmetric in the \textbf{k}
+direction, we consider the finer grid to be double the next coarser
+grid. The table below indicates the grid information and the resulting
+pressure recovery computed from the solutions. Each solution was
+properly converged with respect to iterations. The column indicated by
+"spacing" is the spacing normalized by the spacing of the finest grid.
+
+%\begin{longtable}[]{@{}ccc@{}}
+%\toprule()
+%\endhead
+%Grid & Normalized Grid Spacing & Pressure Recovery, Pr \\
+%1 & 1 & 0.97050 \\
+%2 & 2 & 0.96854 \\
+%3 & 4 & 0.96178 \\
+%\bottomrule()
+%\end{longtable}
+
+The figure below shows the plot of pressure recoveries with varying grid
+spacings. As the grid spacing reduces, the pressure recoveries approach
+an asymptotic zero-grid spacing value.
+
+We determine the order of convergence observed from these results,
+
+\textbf{p = ln{[} ( 0.96178 - 0.96854 ) / ( 0.96854 - 0.97050 ) {]} /
+ln(2) = 1.786170}
+
+The theoretical order of convergence is \textbf{p=2.0}. The difference
+is most likely due to grid stretching, grid quality, non-linearities in
+the solution, presence of shocks, turbulence modeling, and perhaps other
+factors.
+
+We now can apply Richardson extrapolation using the two finest grids to
+obtain an estimate of the value of the pressure recovery at zero grid
+spacing,
+
+\textbf{Pr\textsubscript{h=0} = 0.97050 + ( 0.97050 - 0.96854 ) / (
+2\textsuperscript{1.786170} - 1 )\\
+= 0.97050 + 0.00080 = 0.97130}
+
+This value is also plotted on the figure below.
+
+The grid convergence index for the fine grid solution can now be
+computed. A factor of safety of \textbf{F\textsubscript{S}=1.25} is used
+since three grids were used to estimate \textbf{p}. The \textbf{GCI} for
+grids 1 and 2 is:
+
+\textbf{GCI\textsubscript{12} = 1.25 \textbar{} ( 0.97050 - 0.96854 ) /
+0.97050 \textbar{} / ( 2\textsuperscript{1.786170} - 1 ) 100\% =
+0.103083\%}
+
+The \textbf{GCI} for grids 2 and 3 is:
+
+\textbf{GCI\textsubscript{23} = 1.25 \textbar{} ( 0.96854 - 0.96178 ) /
+0.96854 \textbar{} / ( 2\textsuperscript{1.786170} - 1 ) 100\% =
+0.356249\%}
+
+We can now check that the solutions were in the asymptotic range of
+convergence,
+
+\textbf{0.356249 / ( 2\textsuperscript{1.786170} 0.103083 ) = 1.002019}
+
+which is approximately one and indicates that the solutions are well
+within the asymptotic range of convergence.
+
+Based on this study we could say that the pressure recovery for the
+supersonic ramp is estimated to be \textbf{Pr = 0.97130} with an error
+band of \textbf{0.103\%} or \textbf{0.001}.
+
+%\includegraphics{Examining Spatial (Grid) Convergence_files/pr.gif}
+
+\hypertarget{verify-a-fortran-program-to-perform-calculations-associated-with-a-grid-convergence-study}{%
+\subsubsection{VERIFY: A Fortran program to Perform Calculations
+Associated with a Grid Convergence
+Study}\label{verify-a-fortran-program-to-perform-calculations-associated-with-a-grid-convergence-study}}
+
+The Fortran 90 program
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/verify.f90}{verify.f90}
+was written to carry out the calculations associated with a grid
+convergence study involving 3 or more grids. The program is compiled on
+a unix system through the commands:
+
+\begin{quote}
+\textbf{f90 verify.f90 -o verify}
+\end{quote}
+
+It reads in an ASCII file
+(\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/prD.do}{prD.do})
+through the standard input unit (5) that contains a list of pairs of
+grid size and value of the observed quantity \textbf{f}.
+
+\begin{quote}
+\textbf{verify \textless{}
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/prD.do}{prD.do}
+\textgreater{}
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/prD.out}{prD.out}}
+\end{quote}
+
+It assumes the values from the finest grid are listed first. The output
+is then written to the standard output unit (6)
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/prD.out}{prD.out}.
+The output from the of \{\textbackslash tt verify\} for the results of
+Appendix A are:
+
+\begin{quote}
+\begin{verbatim}
+ --- VERIFY: Performs verification calculations ---
+  
+ Number of data sets read =  3
+  
+      Grid Size     Quantity
+  
+      1.000000      0.970500
+      2.000000      0.968540
+      4.000000      0.961780
+  
+ Order of convergence using first three finest grid 
+ and assuming constant grid refinement (Eqn. 5.10.6.1) 
+ Order of Convergence, p =  1.78618479
+  
+ Richardson Extrapolation: Use above order of convergence
+ and first and second finest grids (Eqn. 5.4.1) 
+ Estimate to zero grid value, f_exact =  0.971300304
+  
+ Grid Convergence Index on fine grids. Uses p from above.
+ Factor of Safety =  1.25
+  
+   Grid     Refinement            
+   Step      Ratio, r       GCI(%)
+   1  2      2.000000      0.103080
+   2  3      2.000000      0.356244
+  
+ Checking for asymptotic range using Eqn. 5.10.5.2.
+ A ratio of 1.0 indicates asymptotic range.
+  
+  Grid Range    Ratio
+  12 23      0.997980
+  
+ --- End of VERIFY ---
+\end{verbatim}
+\end{quote}
+
+\hypertarget{examples-of-grid-converence-studies-in-the-archive}{%
+\subsubsection{Examples of Grid Converence Studies in the
+Archive}\label{examples-of-grid-converence-studies-in-the-archive}}
+
+A grid convergence study is performed in the
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/wedge/wedge.html}{Supersonic
+Wedge} case.
+
+\hypertarget{examples-of-grid-converence-studies-in-literature}{%
+\subsubsection{Examples of Grid Converence Studies in
+Literature}\label{examples-of-grid-converence-studies-in-literature}}
+
+Other examples of grid convergence studies that use the procedures
+outlined above can be found in
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/bibliog.html\#Roachebook}{the
+book by Roache} and the paper by
+\href{https://www.grc.nasa.gov/www/wind/valid/tutorial/bibliog.html\#Steffen95}{Steffen
+et al.}.
+
+\hypertarget{nparc-alliance-policy-with-respect-to-grid-converence-studies}{%
+\subsubsection{NPARC Alliance Policy with Respect to Grid Converence
+Studies}\label{nparc-alliance-policy-with-respect-to-grid-converence-studies}}
+
+For the WIND verification and validation effort, it is suggested that
+the above procedures be used when conducting and reporting results from
+a grid convergence study.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+{Last Updated:} Wednesday, 10-Feb-2021 09:38:58 EST\\
+\strut
+\end{minipage} \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{footer}{}
+{Responsible NASA Official/Curator:}
+\href{mailto:john.w.slater@nasa.gov}{John W. Slater}
+
+{{Web Policies: }
+\href{http://www.grc.nasa.gov/Doc/grcwebpolicies.html}{Web Privacy
+Policy and Important Notices}}\\
+{Adobe Reader Download: }
+\href{http://www.adobe.com/products/acrobat/readstep2.html}{Adobe
+Reader}
+
+%\end{document}

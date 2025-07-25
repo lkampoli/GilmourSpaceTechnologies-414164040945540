@@ -1,0 +1,112 @@
+% Page setup
+\usepackage[a4paper]{geometry}
+
+% PDF management (to include PDF pages)
+\usepackage{pdfpages}
+
+% Table management (for advanced table formatting)
+\usepackage{tabu}
+
+% Font handling
+\usepackage{mathspec} 
+%\usepackage[no-math]{fontspec} 
+\usepackage{fontspec} % for font selection and OpenType/TrueType support
+
+\usepackage[english]{babel} 
+
+% Mathematics support
+\usepackage{amsmath, amssymb, amsthm, thmtools}
+
+%\usepackage[no-math]{fontspec} 
+%\setmainfont{Gentium Plus} 
+%\usepackage[italic]{mathastext}
+
+% Input encoding
+\usepackage[utf8]{inputenc}
+
+% File-related commands (for working with file paths)
+\usepackage[abspath]{currfile} 
+
+% Section and subsection formatting
+\usepackage{titlesec}
+
+% Drawing and custom graphics
+\usepackage{tikz} 
+
+% Watermark management
+\usepackage{eso-pic} 
+
+% Header and footer formatting
+\usepackage{fancyhdr} 
+
+% Get total number of pages
+\usepackage{lastpage}
+
+% Optional package for total page count (not used here)
+% \usepackage{zref-totpages} % gets the total page numbers
+
+% Graphics support
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{transparent} % for transparent watermark
+
+% Hyperlink support
+\usepackage[colorlinks, allcolors=blue]{hyperref}
+
+% Table formatting
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{tabularx}
+
+% Color support
+\usepackage[table, svgnames, dvipsnames]{xcolor}
+\definecolor{lightbeige}{RGB}{255, 239, 204}
+\definecolor{green}{RGB}{0, 128, 0}
+\definecolor{codegreen}{rgb}{0, 0.6, 0}
+\definecolor{codegray}{rgb}{0.5, 0.5, 0.5}
+\definecolor{codepurple}{rgb}{0.58, 0, 0.82}
+\definecolor{backcolour}{rgb}{0.95, 0.95, 0.92}
+
+% Code formatting
+\usepackage{verbatim}
+\usepackage{listings}
+\lstset{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+% Caption setup for tables
+\usepackage{caption}
+\captionsetup[table]{skip=2pt}
+
+% Additional useful packages
+\usepackage{subfigure}  % for subfigures
+\usepackage{lscape}     % for landscape pages
+\usepackage{makecell}   % for table cells
+\usepackage{rotating}   % for rotating elements
+\usepackage{nomencl}    % for nomenclature
+
+% Clever references
+\usepackage[nameinlink, capitalize]{cleveref}
+
+% Miscellaneous styling
+\usepackage{color,soul}
+\usepackage{stix, bbm, pifont, utfsym, fontawesome, noto}

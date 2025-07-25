@@ -1,0 +1,614 @@
+\section{Implementation of the forces function object}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Location and files of the forces function object}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The \texttt{forces} function object in OpenFOAM is located in the \texttt{src} directory under \texttt{functionObjects}. It consists of two files, \texttt{forces.H} which contains the description of the function object and the class declaration, and \texttt{forces.C}, which contains the definitions of all the functions. Parts of the code that are relevant for understanding the function object and the aim of this work will be shown and explained in the following sub-sections. 
+
+\subsection{The \texttt{forces.H} file}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The \texttt{forces.H} file contains the description of the function object and its usage. The reader is advised to refer to the code listings in the Appendix of this report while reading the explanations that follow. The description is given at the beginning of the file, which states that this file is a part of OpenFOAM (under ”Licence”), what is the name of the class (under ”Class”), that it belongs to a certain group (under ”Group”), \texttt{grpForcesFunctionObjects} (that Doxygen will use to systemize the files accordingly in the OpenFOAM code guide) and a description of what the function object is used for (under ”Description”). With this function object, it is possible to compute forces and moments over a given list of patches, with optional calculation possibilities. The output of the function object consists of total forces and moments, separate pressure and viscous contributions, and optional contributions, in the same output file. Depending on the user settings, different coordinate system will be used for the calculations.
+
+\subsection{The forces dictionary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Another part of the \texttt{forces.H} file is the description of how to set up a dictionary for this function object, shown in the code listing below. The function object can be set up inside the \texttt{controlDict} dictionary directly, or in a separate file that is then included at the end of the \texttt{controlDict}. An arbitrary name is given by the user, named \texttt{<namePrefix>} in the code listing, and afterward, the \texttt{type} of the function object (\texttt{forces}), and a library \texttt{libs} where the function is implemented (the same name as the function object), are stated. After the word \texttt{patches}, the names of all the patches that the forces and moments will be calculated for and integrated over need to be stated (\texttt{<wordRes>} in the listing). If a user wants to state a list of several patches, the names of the patches need to be inside the quotation marks, separated by space, for example, \texttt{patches} (”patch1” ”patch2”). The resulting forces and moments will be given for the agglomeration of all the faces on those patches.
+
+If the user wants to use some of the additional options, like directly providing force density from a file or including porosity effects, a word true needs to be written at the place of \texttt{<bool>} visible in the code below. Otherwise, it should be replaced with \texttt{false} or the whole line should be deleted. When the \texttt{directForceDensity} option is turned on, the force density, which is a force per unit volume, is directly supplied using the fD entry later in the code. Instead of the \texttt{<word>} after fD, the name of the file with the force density field needs to be written. Then, the function object will use the force density to calculate the pressure and viscous forces with it. When the \texttt{porosity} option is turned on, the function object will include the calculation of internal forces that are present in porous materials. These internal forces will be summed up together with pressure and viscous forces to give the resulting force on the stated patch/es. When the \texttt{writeFields} option is turned on, volume field representations of forces and moments will be stored and written in a directory. The name of the directory will be the one stated in the \texttt{<namePrefix>}, for which the option \texttt{useNamePrefix} needs to be turned on also. The coordinate system specification is skipped here and put in a separate subsection below since it is the part of the function object that this work focuses on.
+%
+\begin{lstlisting}[language=sh, caption=Mandatory and optional entries for function object forces]
+Usage
+Minimal example by using \c system/controlDict.functions:
+<namePrefix>
+{
+// Mandatory entries
+type forces;
+libs (forces);
+patches (<wordRes>);
+
+// Optional entries
+directForceDensity <bool>;
+porosity <bool>;
+writeFields <bool>;
+useNamePrefix <bool>;
+\end{lstlisting}
+%
+At the end of the dictionary, there are conditional optional settings for pressure, velocity, and density that can be used when the directForceDensity option is set as false. It is possible to supply the pressure, velocity and density fields by writing the name of the file that contains the field instead of the <word> after p, U, or rho entries. This way, the fields in the files will be used for pressure, viscous, and internal forces calculation instead of the fields calculated during the simulation. The default behavior assumes that the case is compressible. For incompressible cases,
+which are solved using the kinematic pressure, the rho entry can be used to set the freestream density in a way that the user should write rhoInf instead of <word> after the rho entry, and state the scalar value for the density instead of <scalar> after the rhoInf entry. Then, the function object will use the rhoInf scalar value to scale the pressure. If the case is compressible, then the density field should be supplied by writing the name of the file instead of the <word> after the rho entry. The user can also specify the value of the reference pressure by writing it instead of <scalar>
+after the entry pRef. This pressure is then deducted from the calculated (or supplied) pressure in order to calculate the pressure force with only the gage pressure, which is shown in the previous section in equation 2.4.
+
+\begin{lstlisting}[language=sh, caption=Conditional optional entries for function object forces]
+// Conditional optional entries
+
+// if directForceDensity == false
+p <word>;
+U <word>;
+rho <word>;
+rhoInf <scalar>; // enabled if rho=rhoInf
+pRef <scalar>;
+
+// Inherited entries
+...
+\end{lstlisting}
+
+After the conditional optional entries, the user can add inherited entries as well. Inherited entries are entries inherited from other classes, which in this case are functionObject, writeFile, and coordinateSystem class. Entries inherited from the functionObject class are already mentioned <namePrefix>, type, libs, that specify the function object, but there are other optional inherited entries that can be added to this function object dictionary. Those entries are the following: stating
+the region to which the function object can be applied with entry region, enabling or disabling the function object by stating true or false after the enable entry, enabling/disabling writing to log file using the log entry, limit the usage of the function object in time by writing values after the timeStart and timeEnd entries, control the execution of the function object using executeControl and writing the desired option after it (i.e., timeStep to execute the function object every time
+step, onEnd to execute it at the last time step, etc.), executeInterval entry to chose the frequency of the execution, and the entries to control the writing of the output of the function object, writeControl and writeInterval, with the same options as execution controls. Inherited entries from the writeFile class are the writePrecision entry for choosing the precision of the results written in the output by writing the number of desired decimal places after it, writeToFile entry
+to produce text file output or not by stating true or false after the entry, and useUserTime to use the time unit specified by the user (e.g. degrees) to write the output by stating true or false after the entry. Inherited entries from the coordinateSystem class are mentioned in the text below and they concern the entries to set up global or local coordinate system.
+
+\subsection{Coordinate system specification in the forces dictionary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The forces function object allows the user to specify the coordinate system in three different ways. This is shown in the code listing below. One option is to specify only one point which is the center of rotation, under CofR in the code listing, and the two unit vectors of the axes with specified directions are automatically assigned to that point. The coordinate system will be declared as Cartesian. The
+second option, in lines 91-93, is to specify the origin, under origin, and the two unit vectors of the two coordinate axes, under e1 and e3, to set up a local coordinate system, which will again be automatically set up as Cartesian.
+
+The third option, from line 96 onward, is to set up a subdictionary under the coordinateSystem, which gives more flexibility to the user than the previous two options with the possibility to specify the type of the coordinate system under type, the origin of the coordinate system, under origin, and the rotation of the coordinate axes using the rotation function. The rotation of the coordinate system can be done in different ways, for example, by specifying the two axes with stating their
+unit vectors under, e1 and e3 (this is then identical to the second option explained above), or by specifying one of the axis and the angle of rotation around it. To state which option is used, the user needs to write axes, for the axes specification, or axisAngle, for the angle and axis specification, under type. If the word none is added after the rotation instead of the details of the rotation, then
+this option gives the same effect as CofR specification. Additionally, the entry for the type of the coordinate system after type can be cartesian, to choose to have a Cartesian coordinate system, cylindrical, to have a cylindrical one, or indirect to convert from local to global system or the other way around with optional translation for the origin. Furthermore, there are more options for the type of rotation besides the ones already mentioned such as euler, to define the rotation on the Euler intrinsic convention (around Z, around X and around Z), and starcd, to define the rotation in the STAR-CD convention (around Z, around X and around Y).
+
+\subsection{The forces.C file}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The definitions of functions are given in the forces.C file. The file starts with the member function setCoordinateSystems which sets up the coordinate system. The dictionary for the function object is read and checked for keywords to determine which option is chosen. If the coordinateSystem keyword is found, the function for creating a new local coordinate system will be called using coordSysPtr\_pointer. This pointer points to the memory location of the NewIfPresent function which will set up the new local coordinate system using the entries listed in the subdictionary. In the case when CofR is found in the dictionary, the coordinates of a point stated after the entry origin will be taken as an origin, and unit vectors e1 and e3 are automatically assigned using predefined directions, for example, vector(0, 0, 1) in the code below, to create a Cartesian coordinate system. If neither the CofR or coordinateSystem keywords are found, the function will create a new coordinate system using the inputs for origin, e1, and e3 from the function object’s dictionary (second option described in the previous subsection). This function is executed right after the read() function (explained later in this section) and it sets up the coordinate system before other functions are called in execute() function. 
+
+\begin{lstlisting}[language=sh, caption=Coordinate system specification for function object forces]
+// Cartesian coordinate system specification when
+// evaluating forces and moments, either of the below
+
+// Define the centre of rotation
+// with implicit directions e1=(1 0 0) and e3=(0 0 1)
+CofR (0 0 0); // Centre of rotation
+
+// Define local coordinate system by origin + axes
+origin (0 0 0);
+e1 (1 0 0);
+e3 (0 0 1); // (e1, e2) or (e2, e3) or (e3, e1)
+
+// General coordinate system specification (always cartesian)
+coordinateSystem
+{
+type cartesian;
+origin (0 0 0);
+rotation
+{
+type axes;
+e3 (0 0 1);
+e1 (1 0 0); // (e1, e2) or (e2, e3) or (e3, e1)
+}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++, caption=Setting up coordinate system for forces and moments calculation in \texttt{forces.C} file]
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
+
+void Foam::functionObjects::forces::setCoordinateSystem
+(
+const dictionary& dict,
+const word& e3Name,
+const word& e1Name
+)
+{
+point origin(Zero);
+
+// With objectRegistry for access to indirect (global) coordinate systems
+coordSysPtr_ = coordinateSystem::NewIfPresent(obr_, dict);
+
+if (coordSysPtr_)
+{
+// Report ...
+}
+else if (dict.readIfPresent("CofR", origin))
+{
+const vector e3
+(
+e3Name.empty() ? vector(0, 0, 1) : dict.get<vector>(e3Name)
+);
+const vector e1
+(
+e1Name.empty() ? vector(1, 0, 0) : dict.get<vector>(e1Name)
+);
+
+coordSysPtr_.reset(new coordSystem::cartesian(origin, e3, e1));
+}
+else
+{
+// No 'coordinateSystem' or 'CofR'
+// - enforce a cartesian system
+
+coordSysPtr_.reset(new coordSystem::cartesian(dict));
+}
+}
+\end{lstlisting}
+
+In the code that follows, the force() member function is defined. It is the function that returns the pointer forcePtr that points to the force volume vector field. If the forcePtr does not exist yet, it will create one using IOobject. The sign in the code gives us the signal that the forcePtr is indeed a pointer. After the program exits this function, the moment() member function is defined. This function repeats the same pointer procedure as the force() function, just with a pointer momentPtr. It returns the pointer that points to the moment volume vector field.
+
+\begin{lstlisting}[language=C++, caption=Member function \texttt{force()} in \texttt{forces.C} file]
+Foam::volVectorField& Foam::functionObjects::forces::force()
+{
+auto* forcePtr = mesh_.getObjectPtr<volVectorField>(scopedName("force"));
+return *forcePtr;
+}
+\end{lstlisting}
+
+These two functions are followed by the initialisation member function, initialise(), in the forces.C file
+
+\subsection{Implementation of the forces function object}
+This function searches for the keywords in the function object’s dictionary for optional entries and checks if all the necessary inputs for those entries are present. If directForceDensity entry is present and set true in the dictionary, the program searches for the fD entry (check the Usage of the function object forces in the previous subsection). The volume vector field of force density, written instead of the <word> after the fD entry, is then assigned to the fDName\_member
+data. If the program does not find the volume vector field assigned to the member data, it will write out an error as an output to tell the user that the force density file was not supplied. Then the program continues to search for other additional entries such as p and U. The volume vector fields supplied in the files stated after those entries instead of <word> are assigned to the UName\_member data (if the velocity field is supplied under U) and/or the pName\_member data (if the pressure field is supplied under p). If the program does not find the volume vector field assigned to those member data, and mentioned optional entries are stated in the dictionary, it will write an error as an output to warn the user that the files are missing. Then, the program searches for the file after the entry rho (if the case is compressible) or the rhoInf after the entry rho (if the case is incompressible),
+and if it does not find either of them, it writes out an error as an output to warn the user of the missing entries.
+
+\begin{lstlisting}[language=C++, caption=Member function \texttt{initialise()} in \texttt{forces.C} file]
+void Foam::functionObjects::forces::initialise()
+{
+if (initialised_)
+{
+return;
+}
+
+if (directForceDensity_)
+{
+if (!foundObject<volVectorField>(fDName_))
+{
+FatalErrorInFunction
+<< "Could not find " << fDName_ << " in database"
+<< exit(FatalError);
+}
+}
+else
+{
+if
+(
+!foundObject<volVectorField>(UName_)
+|| !foundObject<volScalarField>(pName_)
+)
+{
+FatalErrorInFunction
+<< "Could not find U: " << UName_
+<< " or p:" << pName_ << " in database"
+<< exit(FatalError);
+}
+
+if (rhoName_ != "rhoInf" && !foundObject<volScalarField>(rhoName_))
+{
+FatalErrorInFunction
+<< "Could not find rho:" << rhoName_ << " in database"
+<< exit(FatalError);
+}
+}
+initialised_ = true;
+}
+\end{lstlisting}
+
+The next member function is the reset() function that sets to zero some of the member data to which the results of calculations will be assigned. It also defines two references (force and moment) which refer to pointers to the two member functions, i.e. force() and moment() explained in the text above, and intialises those references. The initialise() and reset() functions are defined, but not executed until they are called for in the calcForcesMoments() function which is called in
+execute() function later in the code:
+
+\begin{lstlisting}[language=C++, caption=Member function \texttt{reset()} in \texttt{forces.C} file]
+void Foam::functionObjects::forces::reset()
+{
+sumPatchForcesP_ = Zero;
+sumPatchForcesV_ = Zero;
+sumPatchMomentsP_ = Zero;
+sumPatchMomentsV_ = Zero;
+
+sumInternalForces_ = Zero;
+sumInternalMoments_ = Zero;
+
+auto& force = this->force();
+auto& moment = this->moment();
+force == dimensionedVector(force.dimensions(), Zero);
+moment == dimensionedVector(moment.dimensions(), Zero);
+}
+\end{lstlisting}
+
+The rest of the member functions will be briefly explained here, and reader can find the code listings in the appendix of this report. After the initialisation, the member functions regarding the properties of the fluid are defined. The first function is devRhoReff() function that defines how the viscous stress calculation is conducted by checking the existence of dictionaries and the entries inside
+them. Depending on which turbulence model is found in the turbulenceProperties dictionary (that is propertiesName in the code) under the entry turbulenceModel, the stress tensor will be calculated differently by calling different functions, i.e. devRhoReff() function for compressible turbulence model or devReff() function for incompressible turbulence model.
+
+If the first two options are not found, the program searches for the dictionary thermophysicalProperties (dictName in the code) that contains the thermodynamic properties and, if found, uses the properties setup in that dictionary to calculate the viscous stress. The next option that the program searches for is the transportModel object in transportPropereties dictionary, and if any of the non-Newtonian transport models is found, it calls a function for the laminar kinematic viscosity calculation (laminarT.nu() in the code) depending on the model and calculates the viscous stress. In the last option available, the program searches for the Newtonian under the entry transportModel in the transportProperties dictionary, and if it is found, it reads the laminar kinematic viscosity nu from the dictionary (because the Newtonian model assumes that it is constant) and calculates the viscous stress. If none of the options above is found, the code will write the error with a message in the output. The next member function is mu(), shown in the code listing below, which returns the laminar dynamic viscosity depending on the entries found in the dictionaries. There are three op
+
+\section*{Implementation of the Forces Function Object}
+
+This section describes the implementation of the forces function object for laminar dynamic viscosity calculation. The program operates as follows:
+
+\begin{itemize}
+    \item It first searches for the \texttt{thermophysicalProperties} dictionary (\texttt{dictName} in the code). If the dictionary exists, a specific function \texttt{thermo.mu()} is called to calculate the dynamic viscosity using the settings defined in the dictionary.
+    \item If the \texttt{thermophysicalProperties} dictionary is not found, the program checks the \texttt{transportModel} entry in the \texttt{transportProperties} dictionary. Depending on the model:
+    \begin{itemize}
+        \item For a non-Newtonian transport model, the kinematic viscosity is calculated using \texttt{laminarT.nu()} and multiplied by the density to obtain the dynamic viscosity (\texttt{rho()*laminarT.nu()}).
+        \item For a Newtonian transport model, the laminar kinematic viscosity is read from the dictionary and multiplied by the density (\texttt{rho()*nu}).
+    \end{itemize}
+    \item If none of these options are found, the program writes an error message to the output.
+\end{itemize}
+
+\subsection*{Member Function \texttt{mu()} in \texttt{forces.C} File}
+\begin{lstlisting}
+262 Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::mu() const
+\end{lstlisting}
+
+\noindent Two member functions handle density calculation. The first function, \texttt{rho()}, returns the density as a volume scalar field. For incompressible flows, the density value is defined in the function object dictionary under the \texttt{rhoInf} entry. The second function calculates density using the pressure field as an argument. It ensures that the pressure's dimensions match the kinematic pressure's dimensions. If \texttt{rhoInf} is not specified, the case is assumed to be compressible.
+
+\subsection*{Density Calculation Functions in \texttt{forces.C} File}
+First function:
+\begin{lstlisting}
+297 Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::rho() const
+\end{lstlisting}
+Second function:
+\begin{lstlisting}
+318 Foam::scalar Foam::functionObjects::forces::rho(const volScalarField& p) const
+\end{lstlisting}
+
+\noindent The functions \texttt{devRhoReff()}, \texttt{mu()}, and \texttt{rho()} are called within the \texttt{calcForcesMoments()} function, executed by the \texttt{execute()} function.
+
+\subsection*{The \texttt{read()} Function in \texttt{forces.C} File}
+The \texttt{read()} function searches for options and entries in the function object's dictionary. The function writes messages to the output if the options are present.
+
+\begin{lstlisting}
+579 bool Foam::functionObjects::forces::read(const dictionary& dict)
+\end{lstlisting}
+
+Example of searching for \texttt{directForceDensity}:
+\begin{lstlisting}
+596 dict.readIfPresent("directForceDensity", directForceDensity_);
+597 if (directForceDensity_)
+598 {
+599   // Optional name entry for fD
+600   if (dict.readIfPresent<word>("fD", fDName_))
+601   {
+602     Info<< " fD: " << fDName_ << endl;
+603   }
+604 }
+\end{lstlisting}
+
+For the \texttt{porosity} option, the program writes whether porosity effects are included or not:
+\begin{lstlisting}
+635 dict.readIfPresent("porosity", porosity_);
+636 if (porosity_)
+637 {
+638   Info<< " Including porosity effects" << endl;
+639 }
+640 else
+641 {
+642   Info<< " Not including porosity effects" << endl;
+643 }
+\end{lstlisting}
+
+\subsection*{The \texttt{calcForcesMoments()} Function}
+The \texttt{calcForcesMoments()} function handles force and moment calculations. It initializes and resets settings before creating a reference to the coordinate system's origin:
+\begin{lstlisting}
+656 void Foam::functionObjects::forces::calcForcesMoments()
+657 {
+658   initialise();
+659   reset();
+660   const point& origin = coordSysPtr_->origin();
+\end{lstlisting}
+
+If \texttt{directForceDensity} is found, force calculations use the supplied density field:\
+\begin{lstlisting}
+664 if (directForceDensity_)
+665 {
+666   const auto& fD = lookupObject<volVectorField>(fDName_);
+667   const auto& Sfb = mesh_.Sf().boundaryField();
+668   for (const label patchi : patchSet_)
+669   {
+670     const vectorField& d = mesh_.C().boundaryField()[patchi];
+671     const vectorField Md(d - origin);
+672     const scalarField sA(mag(Sfb[patchi]));
+673     const vectorField fP(Sfb[patchi]/sA * (Sfb[patchi] & fD.boundaryField()[patchi]));
+674     const vectorField fV(sA*fD.boundaryField()[patchi] - fP);
+675     addToPatchFields(patchi, Md, fP, fV);
+676   }
+677 }
+\end{lstlisting}
+
+If \texttt{directForceDensity} is not found, calculations use the pressure field:\
+\begin{lstlisting}
+695 const auto& p = lookupObject<volScalarField>(pName_);
+696 const auto& Sfb = mesh_.Sf().boundaryField();
+697 tmp<volSymmTensorField> tdevRhoReff = devRhoReff();
+698 const auto& devRhoReffb = tdevRhoReff().boundaryField();
+699 for (const label patchi : patchSet_)
+700 {
+701   const vectorField& d = mesh_.C().boundaryField()[patchi];
+702   const vectorField Md(d - origin);
+703   const vectorField fP(rhoRef*Sfb[patchi]*(p.boundaryField()[patchi] - pRef));
+704   const vectorField fV(Sfb[patchi] & devRhoReffb[patchi]);
+705   addToPatchFields(patchi, Md, fP, fV);
+706 }
+\end{lstlisting}
+
+\subsection*{Resistance Forces from Porous Zones}
+If \texttt{porosity} is enabled, resistance forces are calculated as follows:
+\begin{lstlisting}
+if (porosity_)
+{
+  const auto& U = lookupObject<volVectorField>(UName_);
+  const volScalarField rho(this->rho());
+  const volScalarField mu(this->mu());
+  const auto models = obr_.lookupClass<porosityModel>();
+  if (models.empty())
+  {
+    WarningInFunction
+    << "Porosity effects requested, but no porosity models found in the database" << endl;
+  }
+  forAllConstIters(models, iter)
+  {
+    auto& pm = const_cast<porosityModel&>(*iter());
+    const vectorField fPTot(pm.force(U, rho, mu));
+    for (const label zonei : pm.cellZoneIDs())
+    {
+      const cellZone& cZone = mesh_.cellZones()[zonei];
+      const vectorField d(mesh_.C(), cZone);
+      const vectorField fP(fPTot, cZone);
+      const vectorField Md(d - origin);
+      addToInternalField(cZone, Md, fP);
+    }
+  }
+}
+\end{lstlisting}
+tic pressure. If the rhoInf is not stated after rho
+in the function object’s dictionary, it means that the case should be compressible and the pressure
+should be the dynamic pressure. If the kinematic pressure is provided instead, the program will
+write the error in the output to warn the user.
+First member function for density calculation in forces.C file
+297 Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::rho() const
+Second member function for density calculation in forces.C file
+318 Foam::scalar Foam::functionObjects::forces::rho(const volScalarField\& p) const
+The devRhoReff(), mu() and rho() functions are executed when called in calcForcesMoments()
+function which is called in execute() function.
+The part of the code that is written in between the member functions described above and the
+part of the code that takes care of writing out the data in files will be skipped here and explained
+after the calculation of forces since some parts of the code need to be introduced first. Furthermore,
+since writing the data in the files in postProcessing folder and log files is not very interesting for
+the developments done in this report, its description will be skipped here for the sake of brevity.
+Before explaining the forces and moments calculation, it is important to mention the read()
+function that takes care of searching for all the options and entries in the function object’s dictionary.
+The function takes the mentioned dictionary as an argument (read(const dictionary\& dict) in
+the code below), reads if the options are present, and writes out the messages in the output if they
+are.
+20
+3.3. The forces.C file Chapter 3. Implementation of the forces function object
+The read() function definition in forces.C file
+579 bool Foam::functionObjects::forces::read(const dictionary\& dict)
+For example, if directForceDensity entry is found, the program will search for fD entry and write out the name of the field that is supplied, like in the code below. In the same way, the program will write out the field names for other optional entries like p, U, rho, and reference density rhoInf and pressure pRef.
+directForceDensity option search in the read() function
+dict.readIfPresent("directForceDensity", directForceDensity\_);
+if (directForceDensity\_)
+{
+// Optional name entry for fD
+if (dict.readIfPresent<word>("fD", fDName\_))
+{
+Info<< " fD: " << fDName\_ << endl;
+}
+}
+For the porosity option, the program will write out a message that the porosity effects are included or not included, depending on whether the option is turned on or not. This is shown in the code listing below. The program will also search for the writeFields entry and write out the message if the option is turned on (set as true in the dictionary). The default setting for this option
+is false, in which case the program will not write anything in the output.
+porosity option search in the read() function
+635 dict.readIfPresent("porosity", porosity\_);
+636 if (porosity\_)
+637 {
+638 Info<< " Including porosity effects" << endl;
+639 }
+640 else
+641 {
+642 Info<< " Not including porosity effects" << endl;
+643 }
+The read() function is executed first, before all other functions, and returns the boolean true
+after the successful execution.
+The forces function object has multiple options for calculating forces and moments depending on
+the initial user settings. The code below shows the calcForcesMoments() function that takes care
+of those calculations. The function first calls for the initialise() function, executes it, exits that
+function, and does the same for the reset() function. Both of these functions were explained in the
+previous paragraphs of this subsection (the reader is advised to read it again to refresh the memory if
+needed). Then, the reference to the origin of the coordinate system set in the setCoordinateSystem
+function is created (origin, line 662 in the code below).
+. The forces.C file Chapter 3. Implementation of the forces function object
+ calcForcesMoments() function
+ void Foam::functionObjects::forces::calcForcesMoments()
+ {
+ initialise();
+
+ reset();
+
+ const point\& origin = coordSysPtr\_->origin();
+ program then searches for the keyword directForceDensity in the dictionary of the function object, and if it finds it, the calculation of forces using the supplied density field is conducted. The references to the supplied density field fD and to the face area vectors of all the faces Sfb are created. The function Sf() is used to retrieve the face area vectors from the mesh. Then the program enters the for loop with which a series of calculations are being performed for all the faces on the selected patches. The loop will be repeated for every patch selected by the user
+r (const label patchi : patchSet\_) in the code below, where patchi is a patch in the list of patches saved in patchSet\_ member data). Inside the for loop, first the coordinates of the  centers of all the faces are found using the function C(), and then the face centers on the selected patches are extracted using the function boundartField() on the function C() (line 672 in the code below). d is then a reference to the list of the centers of the faces belonging to the patches. Then, the position vectors for the later moment calculation are calculated by subtracting the location of the origin (set by the user in the dictionary) from the location of the centers of the faces d. It is good to mention again that the center of the face is taken as the point where the force is acting and this is the reason that it is used to calculate the position vector. The reader is advised to go back to the previous section and read about the moment calculation in subsection 2.2. The field of
+culated position vectors is called Md in the code below. Then, the surface area of the faces, i.e.
+ is calculated by taking the magnitude of the face area vectors in line 676 in the code.
+culation of pressure and viscous forces from force density field
+% if (directForceDensity_)
+% {
+% const auto& fD = lookupObject<volVectorField>(fDName_);
+%
+% const auto& Sfb = mesh_.Sf().boundaryField();
+%
+% for (const label patchi : patchSet_)
+% {
+% const vectorField& d = mesh_.C().boundaryField()[patchi];
+%
+% const vectorField Md(d - origin);
+%
+% const scalarField sA(mag(Sfb[patchi]));
+%
+% // Pressure force = surfaceUnitNormal*(surfaceNormal & forceDensity)
+% const vectorField fP
+% (
+% Sfb[patchi]/sA
+% *(
+% Sfb[patchi] & fD.boundaryField()[patchi]
+% )
+% );
+%
+% // Viscous force (total force minus pressure fP)
+% const vectorField fV(sA*fD.boundaryField()[patchi] - fP);
+%
+% addToPatchFields(patchi, Md, fP, fV);
+% }
+% }
+
+3.3. The forces.C file Chapter 3. Implementation of the forces function object
+Finally, the pressure force fP can be calculated by multiplying the face unit normal with the
+inner product of the face area vector (the normal of the face) and the density, for each face of the
+patch. The face unit normal is calculated by dividing the face area vector Sfb with the surface
+area of the face sA. The viscous force fV is calculated in line 688 by subtracting the pressure force
+from the total force (multiplication of the surface area of the face with the force density), for each
+face of the patch. The calculated position vector, pressure, and viscous force are then saved to the
+lists using addToPatchFields function, which will be explained later in the report, and the whole
+procedure is repeated for all the patches selected by the user.
+If the directForceDensity entry is not found in the dictionary, the forces are calculated using
+the calculated or supplied pressure field. The calculation is shown in the code listings below. First
+the references to the pressure field p and to the face area vectors Sfb are created. Then, the viscous
+stress tensor tdevRhoReff is created by calling the function devRhoReff() (explained in the previous
+paragraphs of this subsection). Next, the reference to the viscous stress tensor field on the patches
+devRhoReffb is created. Before the calculation of forces in the for loop, there are two lines that
+take care of the reference pressure calculation for the incompressible cases (the reader is advised to
+go back to the 3.2 subsection to read about the incompressible cases settings). First, the reference
+density rhoRef is set using the rho() function that takes the pressure as an argument (discussed
+in the previous paragraphs of this subsection). Then, the reference pressure set by the user in the
+dictionary of the function object pRef is divided by the reference density to obtain the kinematic
+pressure that the incompressible cases require in OpenFOAM.
+Calculation of pressure and viscous forces using pressure field
+695 const auto\& p = lookupObject<volScalarField>(pName\_);
+696
+697 const auto\& Sfb = mesh\_.Sf().boundaryField();
+698
+699 tmp<volSymmTensorField> tdevRhoReff = devRhoReff();
+700 const auto\& devRhoReffb = tdevRhoReff().boundaryField();
+701
+702 // Scale pRef by density for incompressible simulations
+703 const scalar rhoRef = rho(p);
+704 const scalar pRef = pRef\_/rhoRef;
+After this, the program enters the for loop that contains the same lines for obtaining the face
+centers and the position vectors as does the directForceDensity option explained above. The
+calculation of the pressure force fP is conducted by multiplying the face area vector Sfb with the
+pressure difference (subtraction of the reference pressure from the total pressure to perform the
+calculation only with gage pressure, refer to the equation 2.4), and multiplying the result with
+the density to correct the calculation with the kinematic pressure (equation 2.5), for all the faces
+belonging to the patch. The viscous force fV is calculated by the inner product of the face area
+vectors Sfb and the viscous stress tensor for all the faces of the patch in line 717 in the code below.
+Like in the directForceDensity option, the position vectors, pressure, and viscous forces are then
+added to the lists and the calculations in the for loop are repeated for all the patches selected by
+the user.
+
+Implementation of the forces function object
+Calculation of pressure and viscous forces using pressure field
+706 for (const label patchi : patchSet\_)
+707 {
+708 const vectorField\& d = mesh\_.C().boundaryField()[patchi];
+709
+710 const vectorField Md(d - origin);
+711
+712 const vectorField fP
+713 (
+714 rhoRef*Sfb[patchi]*(p.boundaryField()[patchi] - pRef)
+715 );
+716
+717 const vectorField fV(Sfb[patchi] \& devRhoReffb[patchi]);
+718
+719 addToPatchFields(patchi, Md, fP, fV);
+720 }
+Furthermore, after the forces calculation, the program checks the dictionary of the porosity entry, and, if present, the resistance forces from porous zones can be calculated. First, the reference U to the supplied velocity vector field is created. Volume scalar fields of density, rho, and kinematic viscosity, mu, are also created by calling the rho() and mu() member functions.Then, porosity models are searched for in the database using lookupClass function applied on the reference to the object registry obr\_. If no porosity models are found, the function writes out the warning visible in  lines 734-736. forAllConstIters function is used to iterate across all cells of the porous zone with constant access. That constant access is cast aside if the mesh is changing by creating a non-constant reference to the cells pm. Then, a vector field of forces over the cell zone(s), fPTot, is created by applying the force() function to the cells. The reference to the list of cells’ IDs from the porous
+zone(s) cellZoneIDs is also created. Finally, the for loop iterates over the cells from each zone by first extracting the mesh (all the cells) that belongs to that zone in cZone, then extracting the face centers of the faces of the cells in d, and calculating the pressure force on the cells from that zone. Position vectors Md for the centers of the faces are also calculated. These forces, position vectors,
+and cells belonging to the zone are added to the internal field list using the addToInternalField() 
+function.
+Calculation of the resistance forces from porous zones
+if (porosity\_)
+{
+const auto\& U = lookupObject<volVectorField>(UName\_);
+const volScalarField rho(this->rho());
+const volScalarField mu(this->mu());
+
+const auto models = obr\_.lookupClass<porosityModel>();
+
+if (models.empty())
+{
+WarningInFunction
+<< "Porosity effects requested, "
+<< "but no porosity models found in the database"
+<< endl;
+}
+
+forAllConstIters(models, iter)
+{
+// Non-const access required if mesh is changing
+auto\& pm = const\_cast<porosityModel\&>(*iter());
+
+const vectorField fPTot(pm.force(U, rho, mu));
+
+const labelList\& cellZoneIDs = pm.cellZoneIDs();
+
+ The forces.C file Chapter 3. Implementation of the forces function object
+
+for (const label zonei : cellZoneIDs)
+{
+const cellZone\& cZone = mesh\_.cellZones()[zonei];
+
+const vectorField d(mesh\_.C(), cZone);
+const vectorField fP(fPTot, cZone);
+const vectorField Md(d - origin);
+
+addToInternalField(cZone, Md, fP);
+}
+
+Before explaining the reduce() function at the end of the calcForcesMoments() function, the arguments that the reduce() function takes need to be explained first. They can be found in the code listings below. After the forces calculations explained above, the integration of forces and the moments calculation and integration need to be performed. This is defined earlier in the code, inside Protected-MemberFunctions, with addToPatchFields and addToInternalField functions. Integration of forces is done by summing calculated pressure and viscous forces over all the faces that belong to the selected patch using the sum() function and adding that summed force that acts on the whole patch in the list of forces acting on patches (sumPatchForcesP\_ for pressure force on the patches and sumPatchForcesV\_ for viscous force on the patches) using the operator +=. The total force, which is the sum of the pressure force and viscous force, is also calculated in line 346. Then, moments are calculated using the cross product (sign in the code below) of forces (fP and fV) and the position vectors (Md), according to equation 2.14 from section 2.
+
+The moments are integrated over the selected patch the same way as the forces, using the sum() function, and added to the list of moments on the patches (sumPatchMomentsP\_ for moments of pressure forces on the patches mP and sumPatchMomentsV\_ for moments of viscous forces on the patches mV). The total moment is also calculated, as a sum of the moment of pressure force (mP) and the moment of viscous force (fV). As mentioned in the previous paragraph of this subsection,
+the function addToPatchFields is called at the end of each for loop, i.e. it is repeated for every patch to create the list of integrated forces and moments for each patch specified by the user. A similar procedure is done for the internal forces if the porosity effects are included, where the addToInternalField function sums all the internal forces (forces on the internal faces in porous
+materials), calculates the moments and their summation, and adds them to sumInternalForces\_ and sumInternalMoments\_ lists. The difference is that there is the for loop in this case that loops over the internal cells of the zone to integrate forces and moments. 
+
+Moment calculation and integration
+void Foam::functionObjects::forces::addToPatchFields
+(
+const label patchi,
+const vectorField\& Md,
+const vectorField\& fP,
+const vectorField\& fV
+)
+{
+sumPatchForcesP\_ += sum(fP);
+sumPatchForcesV\_ += sum(fV);
+force().boundaryFieldRef()[patchi] += fP + fV;
+
+%const vectorField mP(Md$^$fP);
+%const vectorField mV(Md$^$fV);
+
+sumPatchMomentsP\_ += sum(mP);
+sumPatchMomentsV\_ += sum(mV);
+moment().boundaryFieldRef()[patchi] += mP + mV;
+}
+
+Implementation of the forces function object
+Going back to the calcForcesMoments() function, before the program exits the function, a
+reduce() function is used to ensure that simulation can be run in parallel (simultaneously on
+multiple processors where each processor has some parts of the patches). An example is show in the
+line of the code below. After running the code, each processor will contain the forces and moments
+only for their parts of the patches, so the reduce() function ensures summation over all processors
+to get the complete pressure and viscous forces and moments on the selected patches or/and internal
+forces and moments on the selected internal cells.
+The reduce() function
+761 reduce(sumPatchForcesP\_, sumOp<vector>());
+The calcForcesMoments() function is of type void, so it does not return anything and it is not executed until called by another function - the execute() function.
+The main function of the code is actually the execute() function, although it is written almost at the very end. The part of the code that contains this function is shown in the code below. Most of the functions described in this subsection are called and executed after the program enters the execute() function, but there are some functions that need to be executed before like read() and setCoordinateSystem() functions. When the program enters the execute() function, the calcForcesMoments() function is called first, and upon entering the calcForcesMoments() function, three other functions are called and executed before the rest of the calcForcesMoments() function is executed itself. After the calcForcesMoments() function is executed, the program continues with the execution of the execute() function. 
+
+%The execute() function
+%bool Foam::functionObjects::forces::execute()
+%{
+%calcForcesMoments();
+
+In the rest of the function, the reference to the coordinate system set by the setCoordinateSystem function is created. Then, the localVector() function is used to transform the calculated vector components of the forces and moments from global to a local coordinate system if the local coordinate system is set by the user in the dictionary of the forces function object. Before exiting the function, the program runs the setResult() function which connects vector lists of transformed forces and moments to the correct names. After the function is executed, it returns the boolean
+true. The whole function can be found in the forces.C file in the Appendix of this report. The write() function at the end of the forces.C file is responsible for writing the calculated forces and moments into designated files, but it was skipped here for brevity and is not influenced by later modifications.

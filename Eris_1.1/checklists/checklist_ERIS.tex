@@ -1,0 +1,127 @@
+\section{Work in Progress}
+
+\begin{description}
+    \item[Checklists] Checklists to go through during peer review of the analysis.
+\end{description}
+
+\subsection*{Pre-setup Checks}
+\begin{itemize}
+    \item[$\checkmark$] Goals of the analysis defined. [\textbf{Sect}.~\ref{sec:intro}]
+    \item[$\checkmark$] All operating cases and conditions identified, both flight and ground if applicable. [\textbf{Sect}.~\ref{sec:description}]
+    \item[$\checkmark$] Boundary and initial conditions identified and selected.
+    \item[$\checkmark$] Required dimensionality of the spatial model understood (2D, full 3D, slice 3D).
+    \item[$\checkmark$] Appropriate temporal modelling identified (steady or transient).
+    \item[$\checkmark$] Made educated guess of what final results will look like.
+    \item[$\checkmark$] Assumptions being made have been identified.
+    \item[$\checkmark$] Remember that CFD should stand for Computational Fluid Dynamics and not Colours For Director!
+\end{itemize}
+
+\subsection*{Setup Checks}
+
+\subsubsection*{Geometry and Mesh:}
+\begin{itemize}
+    \item[$\checkmark$] Geometry is at worst case tolerances.
+    \item[$\checkmark$] Check the geometry is a watertight 3D solid or 2D surface.
+    \item[$\checkmark$] Use descriptive strings to name entities (e.g. fluid, inlet, outlet, wall, axis, symmetry, periodicity).
+    \item[$\checkmark$] If using a 2D axisymmetric model, check the axis of rotation is the x-axis of the model.
+    \item[$\checkmark$] Choose suitable mesh type for low vs large cell count and simple vs complex geometries.
+    \item[$\checkmark$] Select appropriate meshing methods, global controls, and local sizings.
+    \item[$\checkmark$] If resolving directly the wall boundary layer is important, use inflation layers to achieve y+ ~ 1 (Fluent 2023 R2 Theory Guide 4.7.3).
+    \item[$\checkmark$] If using wall functions, use inflation layers to achieve a y+ of an appropriate range for the specified near-wall treatment setting (Fluent 2023 R2 Theory Guide 4.17).
+    \item[$\checkmark$] Assure a constant growth rate between inflation layers and volume mesh.
+    \item[$\checkmark$] Check that in the regions of interest the mesh does not have high growth rate or large steps in mesh size such as octree transitions in hex mesh.
+    \item[$\checkmark$] Check mesh quality metrics (e.g. orthogonal quality > 0.1, average skewness < 0.33, maximum skewness < 0.85) (Fluent 2023 R2 User's Guide II.5.3 and III.6.2).
+    \item[$\checkmark$] Mesh passes fluent mesh check.
+\end{itemize}
+
+\subsubsection*{Physics Models and Boundary Conditions:}
+\begin{itemize}
+    \item[$\checkmark$] Select the suitable physics models.
+    \item[$\checkmark$] Use the appropriate turbulence model (k-w SST industry standard for several problems). Consider activating curvature correction for swirling flows.
+    \item[$\checkmark$] Double check material properties.
+    \item[$\checkmark$] Ideal or real fluid properties properly defined and sources documented for new properties entered.
+    \item[$\checkmark$] Correct units used for all boundary condition inputs.
+    \item[$\checkmark$] Reference quantities set appropriately.
+    \item[$\checkmark$] Operating pressure set appropriately to avoid roundoff error problems (Fluent 2023 R2 User's Guide III.8.14). Where no pressure boundary conditions are used, reference pressure location has been set (Fluent 2023 R2 User's Guide III.8.15).
+    \item[$\checkmark$] Pressures are all input as gauge wrt the operating pressure.
+    \item[$\checkmark$] Gravity set correctly if needed.
+\end{itemize}
+
+\subsubsection*{Numerical Methods and Solution Controls:}
+\begin{itemize}
+    \item[$\checkmark$] Considered if the single or double precision solver is needed (Fluent User's Guide I.4.1.2.2).
+    \item[$\checkmark$] Choose the appropriate solver type and temporal model.
+    \item[$\checkmark$] Use 2nd order schemes if possible.
+    \item[$\checkmark$] Adjust absolute convergence criteria for residuals (e.g. to 1E-6).
+    \item[$\checkmark$] Define suitable report definitions and monitors.
+    \item[$\checkmark$] Autosave data file every XXX iterations to preserve results and retain only the most recent files.
+\end{itemize}
+
+\subsection*{Results}
+\begin{longtable}{|c|c|c|}
+    \hline
+    Case & Key result 1 & Key result 2 \\
+    \hline
+    \endfirsthead
+    \hline
+    Case & Key result 1 & Key result 2 \\
+    \hline
+    \endhead
+    \hline
+    \endfoot
+    \hline
+    Case 1 & Value 1 & Value 2 \\
+    Case 2 & Value 1 & Value 2 \\
+\end{longtable}
+
+\noindent Concise presentation of findings with screenshots only of crucial parts.
+
+\noindent Comparison to analytical methods or sanity checks.
+
+\noindent Add table of sensitivity to assumptions if applicable.
+
+\subsection*{Mesh Independence Check}
+\begin{longtable}{|c|c|c|c|}
+    \hline
+    Case & \# of elements & Change in key result 1 & Change in key result 2 \\
+    \hline
+    \endfirsthead
+    \hline
+    Case & \# of elements & Change in key result 1 & Change in key result 2 \\
+    \hline
+    \endhead
+    \hline
+    \endfoot
+    \hline
+    Case 1 & 1000 & 0.01 & 0.02 \\
+    Case 2 & 2000 & 0.005 & 0.01 \\
+\end{longtable}
+
+\newpage
+
+\section*{Goals}
+\begin{itemize}
+    \item \textbf{What are you analysing (and which locations are important)?}
+    \item \textbf{Why are you doing it (Pressure losses estimate, prior to manufacture, trade study)?}
+    \item \textbf{How much accuracy is needed?}
+    \item \textbf{Does this need CFD or could it be done with analytical methods, or testing?}
+\end{itemize}
+
+\section*{Geometry and Mesh}
+\begin{itemize}
+    \item \textbf{Screenshot of geometry.}
+    \item \textbf{Screenshot of typical mesh and refined regions.}
+    \item \textbf{Key mesh sizing.}
+    \item \textbf{Overall mesh quality.}
+    \item \textbf{Total number of elements.}
+\end{itemize}
+
+\section*{Physics Model and Boundary Conditions}
+\begin{itemize}
+    \item \textbf{Include annotated screenshots as required.}
+\end{itemize}
+
+\section*{Numerical Methods and Solution Controls}
+\begin{itemize}
+    \item \textbf{Solver settings details screenshot.}
+\end{itemize}
